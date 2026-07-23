@@ -1,0 +1,57 @@
+<div class="mikhmon-mod-footer">
+  <span>MIKHMON v3.20 Patched (Multi-ROS)</span>
+  <span class="separator">&bull;</span>
+  <span>mod by <a href="https://agil.web.id" target="_blank">agil</a></span>
+  <span class="separator">&bull;</span>
+  <span class="private-use">untuk kalangan sendiri</span>
+</div>
+
+<style>
+  .mikhmon-mod-footer {
+    position: fixed;
+    bottom: 12px;
+    right: 20px;
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.35);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'Inter', sans-serif;
+    background: rgba(12, 11, 24, 0.6);
+    padding: 6px 12px;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+  .mikhmon-mod-footer a {
+    color: rgba(99, 102, 241, 0.85);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+  }
+  .mikhmon-mod-footer a:hover {
+    color: rgba(110, 114, 245, 1);
+    text-decoration: underline;
+  }
+  .mikhmon-mod-footer .private-use {
+    font-style: italic;
+    color: rgba(255, 255, 255, 0.25);
+  }
+  .mikhmon-mod-footer .separator {
+    color: rgba(255, 255, 255, 0.15);
+  }
+  
+  /* Responsive positioning */
+  @media (max-width: 768px) {
+    .mikhmon-mod-footer {
+      position: static;
+      margin: 20px auto;
+      justify-content: center;
+      background: rgba(12, 11, 24, 0.4);
+      width: fit-content;
+    }
+  }
+</style>
