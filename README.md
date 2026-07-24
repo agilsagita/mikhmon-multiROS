@@ -89,6 +89,38 @@ Project ini telah dilengkapi dengan konfigurasi Docker Compose untuk memudahkan 
 
 ## 🔄 Riwayat Perubahan (Changelog)
 
+#### Pembaruan Kustom (Patched by Agil) - 24-07-2026
+
+##### 🐛 Perbaikan Bug Laporan Penjualan (ROS v6 & v7)
+- **Fix filter `?owner` via API tidak bekerja di ROS v6:** Query `/system/script/print` dengan filter `?owner` tidak konsisten di beberapa versi RouterOS v6. Solusi: beralih ke filter `?comment=mikhmon` lalu memfilter `owner` di sisi PHP (`livereport.php`, `selling.php`).
+- **Fix laporan bulanan kosong di ROS v7:** MikroTik RouterOS v7 menyimpan field `owner` System Script dalam format angka bulan (`072026`), sementara PHP selalu menghasilkan format nama bulan (`jul2026`). Solusi: menambahkan konversi `$idbl_num` dan memeriksa kedua format secara bersamaan di PHP filter.
+- **Hasil:** Live Report dan Laporan Penjualan kini bekerja penuh dan konsisten di **RouterOS v6 maupun v7**.
+
+##### 📱 Responsivitas Mobile
+- Implementasi sidebar *slide-over* di mobile menggunakan `transform: translateX()` dengan overlay backdrop yang dapat diklik untuk menutup.
+- Perbaikan duplikasi ikon hamburger di navbar mobile (terdapat `#openNav` dan `#closeNav` yang sama-sama muncul).
+- Penambahan media query `@media (min-width: 769px)` untuk memastikan hanya satu hamburger yang tampil di desktop.
+- Perbaikan hamburger desktop (`#closeNav`) yang tidak bisa diklik ulang setelah satu kali klik — ditambahkan fungsi `toggleDesktopSidebar()` yang membaca lebar sidebar via jQuery computed CSS.
+- Pemindahan posisi hamburger mobile dari tengah ke sisi kiri navbar, rapat di sebelah teks "MIKHMON".
+- Brand `#brand` kini ditampilkan di mobile (sebelumnya disembunyikan oleh framework asli Mikhmon).
+- Grid responsif, tabel horizontal scroll, dan form layout menyesuaikan viewport.
+
+##### 🔐 Halaman Login — Fitur Baru
+- **Toggle Ikon Mata:** Tombol `👁` di dalam field password untuk menampilkan/menyembunyikan teks password, dengan ikon berubah antara `fa-eye` dan `fa-eye-slash`.
+- **Ingat Saya (Remember Me):** Checkbox dengan desain *custom toggle switch* CSS (pill oval berwarna indigo). Username disimpan di cookie 7 hari saat login berhasil; field username otomatis terisi pada kunjungan berikutnya.
+- **Captcha Penjumlahan:** Dua angka acak (1–9) di-generate di sesi PHP. Jawaban diverifikasi di server sebelum proses autentikasi — aman dari manipulasi sisi klien. Soal captcha diperbarui otomatis setiap kali login gagal.
+- Pesan error dibedakan: salah captcha vs salah username/password.
+
+##### 🔑 Login — Perbaikan Logic (`admin.php`)
+- Validasi captcha terjadi **sebelum** pengecekan username/password.
+- Cookie `mikhmon_user` ditulis/dihapus sesuai status centang Remember Me.
+- Captcha dihapus dari session setelah login berhasil.
+
+##### 🗑️ Pembersihan
+- Penghapusan file `check_today.php` yang sudah tidak digunakan.
+
+---
+
 #### Pembaruan Kustom (Patched by Agil) - 23-07-2026
 - **Kompatibilitas MikroTik RouterOS v7 (Multi-ROS Support):**
   - Penerjemahan otomatis kueri bulan alfabetis (misal `jul2026` -> `072026`) di `routeros_api.class.php` untuk pencocokan skrip ROS7.
