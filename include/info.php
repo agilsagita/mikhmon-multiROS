@@ -44,23 +44,27 @@
     color: rgba(255, 255, 255, 0.15);
   }
   
-  /* Responsive positioning */
+  /* Responsive positioning - selalu tampil di tengah bawah */
   @media (max-width: 768px) {
     .mikhmon-mod-footer {
       position: fixed;
-      bottom: 12px;
+      bottom: 10px;
       right: auto;
       left: 50%;
       transform: translateX(-50%);
       white-space: nowrap;
       font-size: 10px;
       padding: 5px 10px;
+      gap: 4px;
     }
   }
 
   @media (max-width: 480px) {
     .mikhmon-mod-footer {
-      display: none;
+      font-size: 9.5px;
+      padding: 4px 8px;
+      bottom: 8px;
+      gap: 3px;
     }
   }
 </style>
