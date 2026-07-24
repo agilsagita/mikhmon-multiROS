@@ -274,9 +274,28 @@ $(document).ready(function(){
     }
   });
 
+  function toggleDesktopSidebar() {
+    var sidenav = document.getElementById('sidenav');
+    var main = document.getElementById('main');
+    var currentWidth = parseInt($('#sidenav').css('width'), 10) || 0;
+    if (currentWidth > 50) {
+      // Sidebar terbuka → tutup
+      sidenav.style.width = '0';
+      main.style.marginLeft = '0';
+    } else {
+      // Sidebar tertutup → buka kembali
+      sidenav.style.width = '210px';
+      main.style.marginLeft = '210px';
+    }
+  }
+
   $('#closeNav').off('click').on('click', function(e) {
     e.preventDefault();
-    if (isMobile()) { closeSidebar(); }
+    if (isMobile()) {
+      closeSidebar();
+    } else {
+      toggleDesktopSidebar();
+    }
   });
 
   $('#sidebar-overlay').on('click', function() { closeSidebar(); });
@@ -453,10 +472,25 @@ $(document).ready(function(){
     }
   });
 
+  function toggleDesktopSidebar() {
+    var sidenav = document.getElementById('sidenav');
+    var main = document.getElementById('main');
+    var currentWidth = parseInt($('#sidenav').css('width'), 10) || 0;
+    if (currentWidth > 50) {
+      sidenav.style.width = '0';
+      main.style.marginLeft = '0';
+    } else {
+      sidenav.style.width = '210px';
+      main.style.marginLeft = '210px';
+    }
+  }
+
   $('#closeNav').off('click').on('click', function(e) {
     e.preventDefault();
     if (isMobile()) {
       closeSidebar();
+    } else {
+      toggleDesktopSidebar();
     }
   });
 
