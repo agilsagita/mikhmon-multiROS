@@ -247,6 +247,7 @@ session_start();
   /* Style the default Mikhmon wrapper for full-screen layout on login page */
   .wrapper {
     display: flex !important;
+    flex-direction: column !important;
     justify-content: center !important;
     align-items: center !important;
     min-height: 100vh !important;
@@ -256,6 +257,42 @@ session_start();
     margin: 0 !important;
     padding: 0 !important;
     max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Ensure login container always centers properly */
+  .login-page-container {
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
+    min-height: 100vh !important;
+    width: 100% !important;
+    padding: 16px !important;
+    box-sizing: border-box !important;
+  }
+
+  @media (max-width: 480px) {
+    .glass-card {
+      padding: 2rem 1.5rem !important;
+      margin: 0 !important;
+      width: 100% !important;
+      max-width: 100% !important;
+      border-radius: 20px !important;
+    }
+
+    .app-title {
+      font-size: 22px !important;
+    }
+
+    .input-modern {
+      font-size: 14px !important;
+    }
+
+    /* Prevent hover lift on touch devices */
+    .glass-card:hover {
+      transform: none !important;
+    }
   }
 </style>
 

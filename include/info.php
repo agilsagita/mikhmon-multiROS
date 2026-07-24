@@ -47,11 +47,20 @@
   /* Responsive positioning */
   @media (max-width: 768px) {
     .mikhmon-mod-footer {
-      position: static;
-      margin: 20px auto;
-      justify-content: center;
-      background: rgba(12, 11, 24, 0.4);
-      width: fit-content;
+      position: fixed;
+      bottom: 12px;
+      right: auto;
+      left: 50%;
+      transform: translateX(-50%);
+      white-space: nowrap;
+      font-size: 10px;
+      padding: 5px 10px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .mikhmon-mod-footer {
+      display: none;
     }
   }
 </style>
