@@ -923,13 +923,40 @@ span.group-item:hover {
   text-shadow: 0 0 8px rgba(99, 102, 241, 0.3) !important;
 }
 
+
 /* =====================================================================
    RESPONSIVE MOBILE LAYOUT
    Breakpoints:
+   - >768px   : Desktop → sidebar always open, openNav hidden
    - ≤992px  : Tablet landscape / small desktop
    - ≤768px  : Tablet portrait → sidebar slide-over
    - ≤480px  : Smartphone → semua elemen tumpuk vertikal
    ===================================================================== */
+
+/* --- Desktop (>768px): Pastikan hanya 1 hamburger --- */
+@media screen and (min-width: 769px) {
+
+  /* Hamburger untuk membuka (hanya di mobile) */
+  #openNav {
+    display: none !important;
+  }
+
+  /* Hamburger untuk toggle sidebar di desktop */
+  #closeNav {
+    display: block !important;
+  }
+
+  /* Nama halaman tampil di desktop */
+  #cpage {
+    display: block !important;
+  }
+
+  /* Brand MIKHMON tampil di desktop */
+  #brand {
+    display: inline-block !important;
+    min-width: 165px !important;
+  }
+}
 
 /* --- Tablet Landscape (≤992px) --- */
 @media screen and (max-width: 992px) {
