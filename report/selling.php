@@ -25,6 +25,26 @@ if (!isset($_SESSION["mikhmon"])) {
 	$idhr = $_GET['idhr'];
 	$idbl = $_GET['idbl'];
 	$idbl2 = explode("/",$idhr)[0].explode("/",$idhr)[2];
+
+	// Konversi idbl dari format nama bulan ke angka untuk ROS v7
+	// Contoh: "jul2026" → "072026"
+	$_monthMap = array(
+		'jan' => '01', 'feb' => '02', 'mar' => '03', 'apr' => '04',
+		'may' => '05', 'jun' => '06', 'jul' => '07', 'aug' => '08',
+		'sep' => '09', 'oct' => '10', 'nov' => '11', 'dec' => '12'
+	);
+	$_idbl_mname = strtolower(substr($idbl, 0, 3));
+	$_idbl_year  = substr($idbl, -4);
+	if (isset($_monthMap[$_idbl_mname]) && strlen($idbl) >= 7) {
+		// idbl format nama: "jul2026" → $idbl_num = "072026"
+		$idbl_num = $_monthMap[$_idbl_mname] . $_idbl_year;
+	} elseif (is_numeric(substr($idbl, 0, 2)) && strlen($idbl) == 6) {
+		// idbl sudah format angka: "072026" → $idbl_num tetap sama
+		$idbl_num = $idbl;
+	} else {
+		$idbl_num = $idbl;
+	}
+
 	if ($idhr != ""){
 		$_SESSION['report'] = "&idhr=".$idhr;
 	} elseif ($idbl != ""){
@@ -36,7 +56,6 @@ if (!isset($_SESSION["mikhmon"])) {
 	$remdata = ($_POST['remdata']);
 	$prefix = $_GET['prefix'];
 	
-
 	$gettimezone = $API->comm("/system/clock/print");
 	$timezone = $gettimezone[0]['time-zone-name'];
 	date_default_timezone_set($timezone);
@@ -110,8 +129,9 @@ if (!isset($_SESSION["mikhmon"])) {
 			$getData_raw = $API->comm("/system/script/print", array(
 				"?comment" => "mikhmon",
 			));
-			$getData = array_values(array_filter($getData_raw, function($row) use ($idbl) {
-				return isset($row['owner']) && trim($row['owner']) === trim($idbl);
+			$getData = array_values(array_filter($getData_raw, function($row) use ($idbl, $idbl_num) {
+				$owner = trim($row['owner']);
+				return $owner === trim($idbl) || $owner === trim($idbl_num);
 			}));
 			$TotalReg = count($getData);
 		}
@@ -133,8 +153,9 @@ if (!isset($_SESSION["mikhmon"])) {
 			$getData_raw = $API->comm("/system/script/print", array(
 				"?comment" => "mikhmon",
 			));
-			$getData = array_values(array_filter($getData_raw, function($row) use ($idbl) {
-				return isset($row['owner']) && trim($row['owner']) === trim($idbl);
+			$getData = array_values(array_filter($getData_raw, function($row) use ($idbl, $idbl_num) {
+				$owner = trim($row['owner']);
+				return $owner === trim($idbl) || $owner === trim($idbl_num);
 			}));
 			$TotalReg = count($getData);
 		}
