@@ -107,9 +107,12 @@ if (!isset($_SESSION["mikhmon"])) {
 		$shd = "inline-block";
 	} elseif (strlen($idbl) > "0") {
 		if ($API->connect($iphost, $userhost, decrypt($passwdhost))) {
-			$getData = $API->comm("/system/script/print", array(
-				"?owner" => "$idbl",
+			$getData_raw = $API->comm("/system/script/print", array(
+				"?comment" => "mikhmon",
 			));
+			$getData = array_values(array_filter($getData_raw, function($row) use ($idbl) {
+				return isset($row['owner']) && trim($row['owner']) === trim($idbl);
+			}));
 			$TotalReg = count($getData);
 		}
 		$filedownload = $idbl;
@@ -127,9 +130,12 @@ if (!isset($_SESSION["mikhmon"])) {
 		$shd = "none";
 	} elseif (strlen($idbl) > "0" ) {
 		if ($API->connect($iphost, $userhost, decrypt($passwdhost))) {
-			$getData = $API->comm("/system/script/print", array(
-				"?owner" => "$idbl",
+			$getData_raw = $API->comm("/system/script/print", array(
+				"?comment" => "mikhmon",
 			));
+			$getData = array_values(array_filter($getData_raw, function($row) use ($idbl) {
+				return isset($row['owner']) && trim($row['owner']) === trim($idbl);
+			}));
 			$TotalReg = count($getData);
 		}
 		$filedownload = $idbl;

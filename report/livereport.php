@@ -76,17 +76,19 @@ include('../lang/'.$langid.'.php');
     ));
     $TotalRHr = count($getSRHr);
     $_SESSION[$session.'totalHr'] = $TotalRHr;*/
-    $getSRBl = $API->comm("/system/script/print", array(
-      "?owner" => "$idbl",
+    $getSRBl_raw = $API->comm("/system/script/print", array(
+      "?comment" => "mikhmon",
     ));
+
+    // Filter by bulan ini di PHP (lebih reliable di semua versi ROS)
+    // karena filter ?owner via API tidak konsisten di beberapa versi ROS v6
+    $getSRBl = array_values(array_filter($getSRBl_raw, function($row) use ($idbl) {
+      return isset($row['owner']) && trim($row['owner']) === trim($idbl);
+    }));
+
     $TotalRBl = count($getSRBl);
     $_SESSION[$session.'totalBl'] = $TotalRBl;
-/*
-    for ($i = 0; $i < $TotalRHr; $i++) {
 
-      $tHr += explode("-|-", $getSRHr[$i]['name'])[3];
-
-    }*/
     foreach($getSRBl as $row){
       $script_date = trim(explode("-|-", $row['name'])[0]);
       if($script_date == trim($idhr) || $script_date == trim($idhr_num)){
