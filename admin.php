@@ -70,19 +70,53 @@ include_once('./lib/formatbytesbites.php');
 <?php
 if ($id == "login" || substr($url, -1) == "p") {
 
+  // Generate captcha baru jika belum ada di session
+  if (empty($_SESSION['captcha_answer'])) {
+    $a = rand(1, 9);
+    $b = rand(1, 9);
+    $_SESSION['captcha_a'] = $a;
+    $_SESSION['captcha_b'] = $b;
+    $_SESSION['captcha_answer'] = $a + $b;
+  }
+
   if (isset($_POST['login'])) {
     $user = $_POST['user'];
     $pass = $_POST['pass'];
-    if ($user == $useradm && $pass == decrypt($passadm)) {
-      $_SESSION["mikhmon"] = $user;
+    $captcha_input = intval($_POST['captcha'] ?? 0);
+    $remember = isset($_POST['remember']);
 
-        echo "<script>window.location='./admin.php?id=sessions'</script>";
-    
+    if ($captcha_input !== intval($_SESSION['captcha_answer'])) {
+      // Reset captcha setelah gagal
+      $a = rand(1, 9); $b = rand(1, 9);
+      $_SESSION['captcha_a'] = $a;
+      $_SESSION['captcha_b'] = $b;
+      $_SESSION['captcha_answer'] = $a + $b;
+      $error = 'captcha';
+    } elseif ($user == $useradm && $pass == decrypt($passadm)) {
+      $_SESSION["mikhmon"] = $user;
+      unset($_SESSION['captcha_answer'], $_SESSION['captcha_a'], $_SESSION['captcha_b']);
+
+      // Remember Me: simpan username di cookie 7 hari
+      if ($remember) {
+        setcookie('mikhmon_user', $user, time() + (7 * 24 * 60 * 60), '/');
+      } else {
+        setcookie('mikhmon_user', '', time() - 3600, '/');
+      }
+
+      echo "<script>window.location='./admin.php?id=sessions'</script>";
+
     } else {
-      $error = '<div style="width: 100%; padding:5px 0px 5px 0px; border-radius:5px;" class="bg-danger"><i class="fa fa-ban"></i> Alert!<br>Invalid username or password.</div>';
+      // Reset captcha setelah gagal
+      $a = rand(1, 9); $b = rand(1, 9);
+      $_SESSION['captcha_a'] = $a;
+      $_SESSION['captcha_b'] = $b;
+      $_SESSION['captcha_answer'] = $a + $b;
+      $error = 'credentials';
     }
   }
-  
+
+  // Pre-fill username dari cookie remember-me
+  $remembered_user = $_COOKIE['mikhmon_user'] ?? '';
 
   include_once('./include/login.php');
 } elseif (!isset($_SESSION["mikhmon"])) {

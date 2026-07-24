@@ -296,6 +296,130 @@ session_start();
   }
 </style>
 
+<style>
+  /* ── Eye toggle button ── */
+  .pass-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  .pass-wrapper .input-modern {
+    padding-right: 48px !important;
+  }
+
+  .eye-toggle {
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    color: rgba(255, 255, 255, 0.35);
+    font-size: 15px;
+    line-height: 1;
+    transition: color 0.25s ease;
+    z-index: 5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+  }
+
+  .eye-toggle:hover {
+    color: rgba(99, 102, 241, 0.9);
+  }
+
+  /* ── Remember Me row ── */
+  .remember-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: -6px 0 16px 0;
+  }
+
+  .remember-row input[type="checkbox"] {
+    width: 16px !important;
+    height: 16px !important;
+    min-width: 16px !important;
+    min-height: 16px !important;
+    max-width: 16px !important;
+    max-height: 16px !important;
+    margin: 0 !important;
+    accent-color: rgba(99, 102, 241, 1);
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+
+  .remember-row label {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+    user-select: none;
+  }
+
+  /* ── Captcha row ── */
+  .captcha-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 1.5rem;
+  }
+
+  .captcha-question {
+    background: rgba(99, 102, 241, 0.08);
+    border: 1px solid rgba(99, 102, 241, 0.2);
+    border-radius: 12px;
+    padding: 8px 16px;
+    font-size: 16px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.85);
+    white-space: nowrap;
+    flex-shrink: 0;
+    font-family: 'Inter', monospace;
+    letter-spacing: 1px;
+  }
+
+  .captcha-input {
+    flex: 1;
+    height: 44px !important;
+    padding: 0 14px !important;
+    background: rgba(255, 255, 255, 0.04) !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    border-radius: 12px !important;
+    color: #ffffff !important;
+    font-size: 16px !important;
+    font-weight: 600 !important;
+    outline: none !important;
+    transition: all 0.3s ease !important;
+    box-sizing: border-box !important;
+    text-align: center;
+    letter-spacing: 2px;
+    font-family: 'Inter', sans-serif !important;
+  }
+
+  .captcha-input:focus {
+    border-color: rgba(99, 102, 241, 0.7) !important;
+    background: rgba(255, 255, 255, 0.07) !important;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12) !important;
+  }
+
+  .captcha-input::placeholder {
+    color: rgba(255, 255, 255, 0.25);
+    font-weight: 400;
+    letter-spacing: 0;
+  }
+
+  .captcha-equals {
+    font-size: 18px;
+    color: rgba(255, 255, 255, 0.4);
+    flex-shrink: 0;
+  }
+</style>
+
 <div class="login-page-container">
   <div class="ambient-glow-1"></div>
   <div class="ambient-glow-2"></div>
@@ -309,28 +433,113 @@ session_start();
       <p class="app-subtitle"><?= $_please_login ?></p>
     </div>
 
-    <form autocomplete="off" action="" method="post">
+    <form autocomplete="off" action="" method="post" id="loginForm">
+
+      <!-- Username -->
       <div class="form-group-modern">
-        <input class="input-modern" type="text" name="user" id="_username" placeholder="Username" required="1" autofocus>
+        <input
+          class="input-modern"
+          type="text"
+          name="user"
+          id="_username"
+          placeholder="Username"
+          required
+          autofocus
+          value="<?= htmlspecialchars($remembered_user ?? '') ?>"
+        >
         <i class="fa fa-user"></i>
       </div>
-      
+
+      <!-- Password + Eye Toggle -->
       <div class="form-group-modern">
-        <input class="input-modern" type="password" name="pass" placeholder="Password" required="1">
-        <i class="fa fa-lock"></i>
+        <div class="pass-wrapper">
+          <input
+            class="input-modern"
+            type="password"
+            name="pass"
+            id="_password"
+            placeholder="Password"
+            required
+          >
+          <button type="button" class="eye-toggle" id="togglePass" title="Lihat / Sembunyikan Password">
+            <i class="fa fa-eye" id="eyeIcon"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Remember Me -->
+      <div class="remember-row">
+        <input type="checkbox" name="remember" id="remember"
+          <?= !empty($remembered_user) ? 'checked' : '' ?>>
+        <label for="remember">Ingat saya selama 7 hari</label>
+      </div>
+
+      <!-- Captcha -->
+      <div class="captcha-row">
+        <div class="captcha-question">
+          <?= $_SESSION['captcha_a'] ?> + <?= $_SESSION['captcha_b'] ?>
+        </div>
+        <span class="captcha-equals">=</span>
+        <input
+          class="captcha-input"
+          type="number"
+          name="captcha"
+          id="_captcha"
+          placeholder="?"
+          required
+          min="1"
+          max="18"
+          autocomplete="off"
+        >
       </div>
 
       <input class="btn-submit-modern" type="submit" name="login" value="Login">
-      
-      <?php if ($error): ?>
+
+      <?php if ($error == 'captcha'): ?>
+        <div class="alert-modern">
+          <i class="fa fa-calculator"></i>
+          <div>Jawaban captcha salah. Coba lagi.</div>
+        </div>
+      <?php elseif ($error == 'credentials'): ?>
         <div class="alert-modern">
           <i class="fa fa-exclamation-triangle"></i>
-          <div>Invalid username or password.</div>
+          <div>Username atau password salah.</div>
         </div>
       <?php endif; ?>
+
     </form>
   </div>
 </div>
+
+<script>
+  // ── Eye Toggle ──────────────────────────────────────────────────
+  document.getElementById('togglePass').addEventListener('click', function () {
+    var passField = document.getElementById('_password');
+    var eyeIcon   = document.getElementById('eyeIcon');
+    if (passField.type === 'password') {
+      passField.type = 'text';
+      eyeIcon.className = 'fa fa-eye-slash';
+      this.title = 'Sembunyikan Password';
+    } else {
+      passField.type = 'password';
+      eyeIcon.className = 'fa fa-eye';
+      this.title = 'Lihat Password';
+    }
+  });
+
+  // ── Autofocus captcha jika username & password sudah terisi ────
+  (function () {
+    var u = document.getElementById('_username');
+    var p = document.getElementById('_password');
+    var c = document.getElementById('_captcha');
+    if (u && u.value.trim() !== '') {
+      p.focus();
+    }
+    p.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') { e.preventDefault(); c.focus(); }
+    });
+  })();
+</script>
 
 </body>
 </html>
