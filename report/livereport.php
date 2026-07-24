@@ -61,6 +61,7 @@ include('../lang/'.$langid.'.php');
 
     $idhr = $thisM . "/" . $thisD . "/" . $thisY;
     $idbl = $thisM . $thisY;
+    $idbl_num = date("m") . $thisY;  // Format ROS v7: "072026"
     
     $monthMap = array(
         'jan' => '01', 'feb' => '02', 'mar' => '03', 'apr' => '04', 
@@ -82,8 +83,10 @@ include('../lang/'.$langid.'.php');
 
     // Filter by bulan ini di PHP (lebih reliable di semua versi ROS)
     // karena filter ?owner via API tidak konsisten di beberapa versi ROS v6
-    $getSRBl = array_values(array_filter($getSRBl_raw, function($row) use ($idbl) {
-      return isset($row['owner']) && trim($row['owner']) === trim($idbl);
+    // Cek dua format: ROS v6 = "jul2026", ROS v7 = "072026"
+    $getSRBl = array_values(array_filter($getSRBl_raw, function($row) use ($idbl, $idbl_num) {
+      $owner = trim($row['owner']);
+      return $owner === trim($idbl) || $owner === trim($idbl_num);
     }));
 
     $TotalRBl = count($getSRBl);
