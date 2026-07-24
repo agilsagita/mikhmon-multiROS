@@ -1000,6 +1000,21 @@ span.group-item:hover {
     padding: 0 8px !important;
   }
 
+  /* Di mobile: tampilkan hamburger openNav, sembunyikan closeNav
+     (closeNav hanya digunakan di desktop untuk menutup sidebar) */
+  #openNav {
+    display: block !important;
+  }
+
+  #closeNav {
+    display: none !important;
+  }
+
+  /* Sembunyikan nama halaman di mobile (hemat tempat) */
+  #cpage {
+    display: none !important;
+  }
+
   /* Sembunyikan label teks logout, sisakan ikon saja */
   #logout span {
     display: none !important;
@@ -1061,9 +1076,19 @@ span.group-item:hover {
     padding: 12px 8px !important;
   }
 
-  .table, table {
+  /* === TABEL: Scroll horizontal ===
+     Kecuali tabel form (settings) yang memang layout vertikal */
+  .table, table:not(.form-table) {
     min-width: 480px !important;
     font-size: 12px !important;
+  }
+
+  /* Tabel form tetap full width (tidak perlu min-width besar) */
+  table.form-table,
+  .card-body > table,
+  .box-body > table {
+    min-width: unset !important;
+    width: 100% !important;
   }
 
   .table th, table th {
@@ -1076,13 +1101,15 @@ span.group-item:hover {
     font-size: 12px !important;
   }
 
-  /* === INPUT GROUP: Wrap di mobile === */
+  /* === INPUT GROUP: Wrap di mobile ===
+     PENTING: input-group-1 (checkbox) tetap kecil, tidak stretch */
   .input-group {
     flex-wrap: wrap !important;
     gap: 6px !important;
     margin: 2px 0 !important;
   }
 
+  /* Semua slot input group jadi full width di mobile ... */
   .input-group [class*="input-group-"] {
     flex: 1 1 100% !important;
     min-width: 0 !important;
@@ -1090,13 +1117,30 @@ span.group-item:hover {
     width: 100% !important;
   }
 
-  /* Input & select full width di mobile */
+  /* ... kecuali input-group-1 yang biasanya hanya checkbox / tombol kecil */
+  .input-group .input-group-1 {
+    flex: 0 0 44px !important;
+    min-width: 44px !important;
+    max-width: 44px !important;
+    width: 44px !important;
+  }
+
+  /* Input & select full width di mobile
+     PENTING: kecualikan select di navbar agar tidak merusak layout navbar */
   input[type="text"],
   input[type="password"],
   input[type="number"],
-  select,
   textarea,
   .form-control {
+    width: 100% !important;
+    margin: 4px 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Select di dalam konten (form), bukan yang di navbar */
+  .card-body select,
+  .box-body select,
+  .main-container select:not(.ses):not(.dropd):not(.stheme):not(.slang):not(.connect) {
     width: 100% !important;
     margin: 4px 0 !important;
     box-sizing: border-box !important;
