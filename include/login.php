@@ -30,8 +30,9 @@ session_start();
     padding: 0;
     font-family: 'Inter', sans-serif !important;
     background: radial-gradient(circle at 10% 20%, rgba(18, 16, 32, 1) 0%, rgba(24, 22, 46, 1) 90%) !important;
-    height: 100vh;
-    overflow: hidden;
+    min-height: 100vh;
+    overflow-y: auto;
+    overflow-x: hidden;
   }
 
   .login-page-container {
@@ -39,7 +40,9 @@ session_start();
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    width: 100vw;
+    width: 100%;
+    padding: 20px;
+    box-sizing: border-box;
     position: relative;
     background-color: transparent;
   }
@@ -78,16 +81,16 @@ session_start();
     width: 100%;
     max-width: 400px;
     padding: 2.5rem;
-    margin: 1rem;
     background: rgba(255, 255, 255, 0.03);
     border: 1px solid rgba(255, 255, 255, 0.07);
     border-radius: 24px;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3),
                 inset 0 1px 0 rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     box-sizing: border-box;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    flex-shrink: 0;
   }
 
   .glass-card:hover {
@@ -262,22 +265,13 @@ session_start();
 
   /* Ensure login container always centers properly */
   .login-page-container {
-    display: flex !important;
-    flex-direction: column !important;
-    justify-content: center !important;
     align-items: center !important;
-    min-height: 100vh !important;
-    width: 100% !important;
     padding: 16px !important;
-    box-sizing: border-box !important;
   }
 
   @media (max-width: 480px) {
     .glass-card {
-      padding: 2rem 1.5rem !important;
-      margin: 0 !important;
-      width: 100% !important;
-      max-width: 100% !important;
+      padding: 2rem 1.25rem !important;
       border-radius: 20px !important;
     }
 
@@ -333,25 +327,62 @@ session_start();
     color: rgba(99, 102, 241, 0.9);
   }
 
-  /* ── Remember Me row ── */
+  /* ── Remember Me: Custom Toggle Switch ── */
   .remember-row {
     display: flex;
     align-items: center;
     gap: 10px;
-    margin: -6px 0 16px 0;
+    margin: -6px 0 18px 0;
   }
 
+  /* Sembunyikan checkbox native */
   .remember-row input[type="checkbox"] {
-    width: 16px !important;
-    height: 16px !important;
-    min-width: 16px !important;
-    min-height: 16px !important;
-    max-width: 16px !important;
-    max-height: 16px !important;
-    margin: 0 !important;
-    accent-color: rgba(99, 102, 241, 1);
-    cursor: pointer;
+    position: absolute !important;
+    opacity: 0 !important;
+    width: 0 !important;
+    height: 0 !important;
+    pointer-events: none !important;
+  }
+
+  /* Track toggle */
+  .toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 36px;
+    height: 20px;
     flex-shrink: 0;
+    cursor: pointer;
+  }
+
+  .toggle-switch .track {
+    position: absolute;
+    inset: 0;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 20px;
+    transition: background 0.25s ease, border-color 0.25s ease;
+  }
+
+  .toggle-switch .thumb {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.5);
+    transition: transform 0.25s ease, background 0.25s ease;
+  }
+
+  /* Checked state */
+  input[type="checkbox"]:checked + .toggle-switch .track {
+    background: rgba(99, 102, 241, 0.7);
+    border-color: rgba(99, 102, 241, 0.5);
+  }
+
+  input[type="checkbox"]:checked + .toggle-switch .thumb {
+    transform: translateX(16px);
+    background: #ffffff;
   }
 
   .remember-row label {
@@ -359,6 +390,7 @@ session_start();
     color: rgba(255, 255, 255, 0.5);
     cursor: pointer;
     user-select: none;
+    line-height: 1.4;
   }
 
   /* ── Captcha row ── */
@@ -453,6 +485,8 @@ session_start();
       <!-- Password + Eye Toggle -->
       <div class="form-group-modern">
         <div class="pass-wrapper">
+          <!-- Ikon kunci di kiri -->
+          <i class="fa fa-lock" style="position:absolute;left:16px;top:50%;transform:translateY(-50%);color:rgba(255,255,255,0.4);font-size:15px;z-index:2;pointer-events:none;"></i>
           <input
             class="input-modern"
             type="password"
@@ -460,6 +494,7 @@ session_start();
             id="_password"
             placeholder="Password"
             required
+            style="padding-left:46px !important; padding-right:48px !important;"
           >
           <button type="button" class="eye-toggle" id="togglePass" title="Lihat / Sembunyikan Password">
             <i class="fa fa-eye" id="eyeIcon"></i>
@@ -467,10 +502,14 @@ session_start();
         </div>
       </div>
 
-      <!-- Remember Me -->
+      <!-- Remember Me: Custom Toggle Switch -->
       <div class="remember-row">
         <input type="checkbox" name="remember" id="remember"
           <?= !empty($remembered_user) ? 'checked' : '' ?>>
+        <label for="remember" class="toggle-switch" aria-hidden="true">
+          <span class="track"></span>
+          <span class="thumb"></span>
+        </label>
         <label for="remember">Ingat saya selama 7 hari</label>
       </div>
 
