@@ -243,8 +243,55 @@ $(document).ready(function(){
     notify("<?= $_loading ?>");
     stheme(this.value)
   });
+
+  // ── Mobile Sidebar Toggle ──────────────────────────────────────
+  function isMobile() { return window.innerWidth <= 768; }
+
+  function openSidebar() {
+    $('#sidenav').addClass('mobile-open');
+    $('#sidebar-overlay').addClass('active');
+    $('body').css('overflow', 'hidden');
+  }
+
+  function closeSidebar() {
+    $('#sidenav').removeClass('mobile-open');
+    $('#sidebar-overlay').removeClass('active');
+    $('body').css('overflow', '');
+  }
+
+  $('#openNav').off('click').on('click', function(e) {
+    e.preventDefault();
+    if (isMobile()) {
+      openSidebar();
+    } else {
+      if ($('#sidenav').css('width') === '0px') {
+        document.getElementById('sidenav').style.width = '210px';
+        document.getElementById('main').style.marginLeft = '210px';
+      } else {
+        document.getElementById('sidenav').style.width = '0';
+        document.getElementById('main').style.marginLeft = '0';
+      }
+    }
+  });
+
+  $('#closeNav').off('click').on('click', function(e) {
+    e.preventDefault();
+    if (isMobile()) { closeSidebar(); }
+  });
+
+  $('#sidebar-overlay').on('click', function() { closeSidebar(); });
+
+  $('#sidenav a').on('click', function() {
+    if (isMobile()) { closeSidebar(); }
+  });
+
+  $(window).on('resize', function() {
+    if (!isMobile()) { closeSidebar(); }
+  });
+  // ──────────────────────────────────────────────────────────────
 });
 </script>
+<div id="sidebar-overlay"></div>
 <div id="notify"><div class="message"></div></div>
 <div id="temp"></div>
 <?php 
@@ -374,6 +421,64 @@ $(document).ready(function(){
     notify("<?= $_loading_theme ?>");
     stheme(this.value)
   });
+
+  // ── Mobile Sidebar Toggle ──────────────────────────────────────
+  function isMobile() { return window.innerWidth <= 768; }
+
+  function openSidebar() {
+    $('#sidenav').addClass('mobile-open');
+    $('#sidebar-overlay').addClass('active');
+    $('body').css('overflow', 'hidden');
+  }
+
+  function closeSidebar() {
+    $('#sidenav').removeClass('mobile-open');
+    $('#sidebar-overlay').removeClass('active');
+    $('body').css('overflow', '');
+  }
+
+  $('#openNav').off('click').on('click', function(e) {
+    e.preventDefault();
+    if (isMobile()) {
+      openSidebar();
+    } else {
+      // Desktop: toggle sidebar width lama (biarkan mikhmon.js menangani)
+      if ($('#sidenav').css('width') === '0px') {
+        document.getElementById('sidenav').style.width = '210px';
+        document.getElementById('main').style.marginLeft = '210px';
+      } else {
+        document.getElementById('sidenav').style.width = '0';
+        document.getElementById('main').style.marginLeft = '0';
+      }
+    }
+  });
+
+  $('#closeNav').off('click').on('click', function(e) {
+    e.preventDefault();
+    if (isMobile()) {
+      closeSidebar();
+    }
+  });
+
+  // Tap backdrop untuk menutup sidebar
+  $('#sidebar-overlay').on('click', function() {
+    closeSidebar();
+  });
+
+  // Saat link di sidebar diklik di mobile → tutup sidebar
+  $('#sidenav a').on('click', function() {
+    if (isMobile()) {
+      closeSidebar();
+    }
+  });
+
+  // Resize handler: jika diperbesar kembali ke desktop, bersihkan state mobile
+  $(window).on('resize', function() {
+    if (!isMobile()) {
+      closeSidebar();
+    }
+  });
+  // ──────────────────────────────────────────────────────────────
 });
 </script>
 <div id="notify"><div class="message"></div></div>
