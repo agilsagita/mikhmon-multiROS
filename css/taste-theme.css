@@ -1238,7 +1238,21 @@ span.group-item:hover {
     width: 90% !important;
     margin: 20% auto !important;
   }
+  /* === DASHBOARD: Grid 2×2 kartu hotspot di mobile === */
+  #r_2 .card-body > .row {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    overflow-x: visible !important;
+  }
+  #r_2 .card-body > .row > [class*="col-"] {
+    flex: 0 0 50% !important;
+    width: 50% !important;
+    max-width: 50% !important;
+    box-sizing: border-box !important;
+    padding: 4px !important;
+  }
 }
+
 
 /* --- Smartphone (≤480px) --- */
 @media screen and (max-width: 480px) {

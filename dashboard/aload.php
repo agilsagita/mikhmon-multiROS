@@ -96,19 +96,39 @@ include('../lang/'.$langid.'.php');
       <div class="box bmh-75 box-bordered">
         <div class="box-group">
           <div class="box-group-icon"><i class="fa fa-server"></i></div>
-              <div class="box-group-area">
-                <span >
-                    <?php
-                    echo $_cpu_load." : " . $resource['cpu-load'] . "%<br/>
-                    ".$_free_memory." : " . formatBytes($resource['free-memory'], 2) . "<br/>
-                    ".$_free_hdd." : " . formatBytes($resource['free-hdd-space'], 2)
-                    ?>
-                </span>
+          <div class="box-group-area" style="width:100%;padding-right:6px;">
+            <?php
+            $cpuLoad  = intval($resource['cpu-load']);
+            $totalMem = intval($resource['total-memory']);
+            $freeMem  = intval($resource['free-memory']);
+            $memPct   = $totalMem > 0 ? round(($totalMem - $freeMem) / $totalMem * 100) : 0;
+            $totalHdd = intval($resource['total-hdd-space']);
+            $freeHdd  = intval($resource['free-hdd-space']);
+            $hddPct   = $totalHdd > 0 ? round(($totalHdd - $freeHdd) / $totalHdd * 100) : 0;
+            $cpuClr   = $cpuLoad >= 80 ? '#e74c3c' : ($cpuLoad >= 60 ? '#f39c12' : '#2ecc71');
+            $memClr   = $memPct  >= 80 ? '#e74c3c' : ($memPct  >= 60 ? '#f39c12' : '#2ecc71');
+            $hddClr   = $hddPct  >= 80 ? '#e74c3c' : ($hddPct  >= 60 ? '#f39c12' : '#2ecc71');
+            $bars = array(
+              array($_cpu_load,    $cpuLoad, $cpuLoad.'%',                     $cpuClr),
+              array($_free_memory, $memPct,  formatBytes($freeMem,1).' bebas',  $memClr),
+              array($_free_hdd,    $hddPct,  formatBytes($freeHdd,1).' bebas',  $hddClr),
+            );
+            foreach($bars as $b) {
+              echo "<div style='margin-bottom:5px;'>
+                <div style='display:flex;justify-content:space-between;font-size:11px;line-height:1.4;margin-bottom:2px;'>
+                  <span>".htmlspecialchars($b[0])."</span>
+                  <span style='opacity:0.7;'>".htmlspecialchars($b[2])."</span>
                 </div>
-              </div>
-            </div>
-          </div> 
+                <div style='background:rgba(255,255,255,0.12);border-radius:4px;height:5px;overflow:hidden;'>
+                  <div style='width:".$b[1]."%%;height:100%%;background:".$b[3].";border-radius:4px;transition:width 0.5s;'></div>
+                </div>
+              </div>";
+            }
+            ?>
+          </div>
+        </div>
       </div>
+    </div>
 
 <?php 
 } else if ($load == "hotspot") {
@@ -129,6 +149,15 @@ include('../lang/'.$langid.'.php');
   } elseif ($counthotspotactive > 1) {
     $hunit = "items";
   }
+
+// disabled users count (badge)
+  $countdisabledusers = intval($API->comm("/ip/hotspot/user/print", array("?disabled" => "yes", "count-only" => "")));
+
+// utilisasi online
+  $utilPct = intval($countallusers) > 0
+    ? round((intval($counthotspotactive) / intval($countallusers)) * 100, 1)
+    : 0;
+  $utilClr = $utilPct >= 80 ? '#e74c3c' : ($utilPct >= 50 ? '#f39c12' : '#3498db');
 
   ?>
     
@@ -156,6 +185,9 @@ include('../lang/'.$langid.'.php');
                             </h1>
                       <div>
                             <i class="fa fa-users"></i> <?= $_hotspot_users ?>
+                            <?php if ($countdisabledusers > 0): ?>
+                            <span style="background:#e74c3c;color:#fff;border-radius:10px;font-size:10px;padding:1px 5px;margin-left:3px;" title="User dinonaktifkan"><?= $countdisabledusers ?> off</span>
+                            <?php endif; ?>
                           </div>
                       </a>
                     </div>
@@ -189,6 +221,18 @@ include('../lang/'.$langid.'.php');
                   </div>
                 </div>
               </div>
+
+              <!-- Utilisasi Online -->
+              <div style="padding:6px 12px 8px;border-top:1px solid rgba(255,255,255,0.07);margin-top:2px;">
+                <div style="display:flex;justify-content:space-between;align-items:center;font-size:11px;margin-bottom:4px;opacity:0.85;">
+                  <span><i class="fa fa-signal"></i>&nbsp; Online: <strong><?= $counthotspotactive ?></strong> / <?= $countallusers ?></span>
+                  <span style="opacity:0.6;"><?= $utilPct ?>%</span>
+                </div>
+                <div style="background:rgba(255,255,255,0.1);border-radius:4px;height:5px;overflow:hidden;">
+                  <div style="width:<?= $utilPct ?>%;height:100%;background:<?= $utilClr ?>;border-radius:4px;transition:width 0.5s ease;"></div>
+                </div>
+              </div>
+
             </div>
           </div>
           </div>

@@ -521,30 +521,27 @@ if ($hotspot == "dashboard" || substr(end(explode("/", $url)), 0, 8) == "?sessio
   }, interval1);
 
 ';
-if ($livereport == "enable" || $livereport == "") {
-  if($_SESSION[$session.'sdate'] != $_SESSION[$session.'idhr']){
-    $_SESSION[$session.'totalHr'] = "0";
-    echo '$("#r_4").load("./report/livereport.php?session=' . $session . ' #r_4");';
-    }else if ($_SESSION[$session.'sdate'] == $_SESSION[$session.'idhr']){  
-    }else{
-      echo '$("#r_4").load("./report/livereport.php?session=' . $session . ' #r_4");';
-    }
-  echo  '
-    var interval2 = "65432";
-    var livereport = setInterval(function() {
-    $("#r_4").load("./report/livereport.php?session=' . $session . ' #r_4"); 
-  }, interval2);
- ';}
-  echo ' 
+echo '
+  function loadIncome() {
+    $("#reloadLreport").html("<i class=\"fa fa-circle-o-notch fa-spin\"></i> Memproses...");
+    $.get("./report/livereport.php?session=' . $session . '", function(html) {
+      var inner = $(html).find("#reloadLreport").html();
+      if (inner) {
+        $("#reloadLreport").html(
+          inner +
+          "<br><small onclick=\"loadIncome()\" style=\"cursor:pointer;opacity:0.65;margin-top:4px;display:inline-block\">" +
+          "<i class=\"fa fa-refresh\"></i> Refresh</small>"
+        );
+      } else {
+        $("#reloadLreport").html("<span>Data tidak tersedia.</span>");
+      }
+    });
+  }
+
   function cancelPage(){
     window.stop();
-    clearInterval(dashboard);';
-    if ($livereport == "enable" || $livereport == "") {
-    echo '
-    clearInterval(livereport);';
-    }
-  echo '
-    }
+    clearInterval(dashboard);
+  }
 </script>';
 
 } elseif ($hotspot == "active" && $serveractive != "") {
