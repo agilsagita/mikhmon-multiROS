@@ -183,7 +183,7 @@ if (!isset($_SESSION["mikhmon"])) {
                   <span style='opacity:0.7;'>".htmlspecialchars($b[2])."</span>
                 </div>
                 <div style='background:rgba(255,255,255,0.12);border-radius:4px;height:5px;overflow:hidden;'>
-                  <div style='width:".$b[1]."%%;height:100%%;background:".$b[3].";border-radius:4px;transition:width 0.5s;'></div>
+                  <div style='width:".$b[1]."%;height:100%;background:".$b[3].";border-radius:4px;transition:width 0.5s;'></div>
                 </div>
               </div>";
             }
@@ -192,6 +192,8 @@ if (!isset($_SESSION["mikhmon"])) {
         </div>
       </div>
     </div>
+
+</div><!-- / #r_1 -->
 
         <div class="row">
           <div  class="col-8">

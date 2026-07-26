@@ -120,7 +120,7 @@ include('../lang/'.$langid.'.php');
                   <span style='opacity:0.7;'>".htmlspecialchars($b[2])."</span>
                 </div>
                 <div style='background:rgba(255,255,255,0.12);border-radius:4px;height:5px;overflow:hidden;'>
-                  <div style='width:".$b[1]."%%;height:100%%;background:".$b[3].";border-radius:4px;transition:width 0.5s;'></div>
+                  <div style='width:".$b[1]."%;height:100%;background:".$b[3].";border-radius:4px;transition:width 0.5s;'></div>
                 </div>
               </div>";
             }
