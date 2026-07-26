@@ -70,9 +70,12 @@ if (!isset($_SESSION["mikhmon"])) {
 // disabled users count (badge)
   $countdisabledusers = intval($API->comm("/ip/hotspot/user/print", array("?disabled" => "yes", "count-only" => "")));
 
+// get & counting hotspot host
+  $counthotspothost = $API->comm("/ip/hotspot/host/print", array("count-only" => ""));
+
 // utilisasi online
-  $utilPct = intval($countallusers) > 0
-    ? round((intval($counthotspotactive) / intval($countallusers)) * 100, 1)
+  $utilPct = intval($counthotspothost) > 0
+    ? round((intval($counthotspotactive) / intval($counthotspothost)) * 100, 1)
     : 0;
   $utilClr = $utilPct >= 80 ? '#e74c3c' : ($utilPct >= 50 ? '#f39c12' : '#3498db');
 
@@ -124,8 +127,8 @@ if (!isset($_SESSION["mikhmon"])) {
 
     <div id="r_1" class="row">
       <div class="col-4">
-        <div class="box bmh-75 box-bordered">
-          <div class="box-group">
+        <div class="box bmh-75 box-bordered" style="height: 96px;">
+          <div class="box-group" style="height: 100%; box-sizing: border-box;">
             <div class="box-group-icon"><i class="fa fa-calendar"></i></div>
               <div class="box-group-area">
                 <span ><?= $_system_date_time ?><br>
@@ -140,8 +143,8 @@ if (!isset($_SESSION["mikhmon"])) {
           </div>
         </div>
       <div class="col-4">
-        <div class="box bmh-75 box-bordered">
-          <div class="box-group">
+        <div class="box bmh-75 box-bordered" style="height: 96px;">
+          <div class="box-group" style="height: 100%; box-sizing: border-box;">
           <div class="box-group-icon"><i class="fa fa-info-circle"></i></div>
               <div class="box-group-area">
                 <span >
@@ -156,8 +159,8 @@ if (!isset($_SESSION["mikhmon"])) {
           </div>
         </div>
     <div class="col-4">
-      <div class="box bmh-75 box-bordered">
-        <div class="box-group">
+      <div class="box bmh-75 box-bordered" style="height: 96px;">
+        <div class="box-group" style="height: 100%; box-sizing: border-box;">
           <div class="box-group-icon"><i class="fa fa-server"></i></div>
           <div class="box-group-area">
             <div style="width:100%; padding-right:15px; box-sizing: border-box;">
@@ -179,13 +182,13 @@ if (!isset($_SESSION["mikhmon"])) {
               );
               $count = count($bars);
               foreach($bars as $i => $b) {
-                $mb = ($i === $count - 1) ? '0' : '6px';
+                $mb = ($i === $count - 1) ? '0' : '4px';
                 echo "<div style='margin-bottom:{$mb};'>
-                  <div style='display:flex;justify-content:space-between;font-size:12px;line-height:1.4;margin-bottom:3px;'>
+                  <div style='display:flex;justify-content:space-between;font-size:11px;line-height:1.2;margin-bottom:2px;'>
                     <span>".htmlspecialchars($b[0])."</span>
                     <span style='opacity:0.8;'>".htmlspecialchars($b[2])."</span>
                   </div>
-                  <div style='background:rgba(255,255,255,0.12);border-radius:4px;height:6px;overflow:hidden;'>
+                  <div style='background:rgba(255,255,255,0.12);border-radius:4px;height:4px;overflow:hidden;'>
                     <div style='width:".$b[1]."%;height:100%;background:".$b[3].";border-radius:4px;transition:width 0.5s;'></div>
                   </div>
                 </div>";
@@ -225,7 +228,7 @@ if (!isset($_SESSION["mikhmon"])) {
                               <span style="font-size: 15px;"><?= $uunit; ?></span>
                             </h1>
                       <div>
-                            <i class="fa fa-users"></i> <?= $_hotspot_users ?>
+                            <i class="fa fa-users"></i> Jumlah Voucher
                             <?php if ($countdisabledusers > 0): ?>
                             <span style="background:#e74c3c;color:#fff;border-radius:10px;font-size:10px;padding:1px 5px;margin-left:3px;" title="User dinonaktifkan"><?= $countdisabledusers ?> off</span>
                             <?php endif; ?>
@@ -235,14 +238,14 @@ if (!isset($_SESSION["mikhmon"])) {
                   </div>
                   <div class="col-3 col-box-6">
                     <div class="box bg-yellow bmh-75">
-                      <a onclick="cancelPage()" href="./?hotspot-user=add&session=<?= $session; ?>">
+                      <a onclick="cancelPage()" href="./?hotspot=hosts&session=<?= $session; ?>">
                         <div>
-                          <h1><i class="fa fa-user-plus"></i>
-                              <span style="font-size: 15px;"><?= $_add ?></span>
+                          <h1><?= $counthotspothost; ?>
+                              <span style="font-size: 15px;">items</span>
                           </h1>
                         </div>
                         <div>
-                            <i class="fa fa-user-plus"></i> <?= $_hotspot_users ?>
+                            <i class="fa fa-users"></i> Host Hotspot
                         </div>
                       </a>
                     </div>
@@ -266,7 +269,7 @@ if (!isset($_SESSION["mikhmon"])) {
               <!-- Utilisasi Online -->
               <div style="padding:6px 12px 8px;border-top:1px solid rgba(255,255,255,0.07);margin-top:2px;">
                 <div style="display:flex;justify-content:space-between;align-items:center;font-size:11px;margin-bottom:4px;opacity:0.85;">
-                  <span><i class="fa fa-signal"></i>&nbsp; Online: <strong><?= $counthotspotactive ?></strong> / <?= $countallusers ?></span>
+                  <span><i class="fa fa-signal"></i>&nbsp; Online: <strong><?= $counthotspotactive ?></strong> / <?= $counthotspothost ?></span>
                   <span style="opacity:0.6;"><?= $utilPct ?>%</span>
                 </div>
                 <div style="background:rgba(255,255,255,0.1);border-radius:4px;height:5px;overflow:hidden;">
@@ -394,7 +397,7 @@ if (!isset($_SESSION["mikhmon"])) {
                       });
                     });
                   </script>
-                  <div id="trafficMonitor"></div>
+                  <div id="trafficMonitor" style="width: 100%;"></div>
                 </div> 
               </div>
             </div>  
