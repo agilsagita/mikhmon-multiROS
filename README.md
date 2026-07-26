@@ -89,6 +89,16 @@ Project ini telah dilengkapi dengan konfigurasi Docker Compose untuk memudahkan 
 
 ## 🔄 Riwayat Perubahan (Changelog)
 
+#### Pembaruan Kustom (Patched by Agil) - 26-07-2026
+##### 📊 Dasbor & Metrik Hotspot
+- **Penyesuaian Metrik:** Mengubah teks label kartu "Pengguna Hotspot" menjadi "Jumlah Voucher".
+- **Host Hotspot:** Kartu "Tambah Pengguna" diganti fungsinya menjadi indikator jumlah Host Hotspot (`ip hotspot host`), menampilkan host aktual yang terhubung ke jaringan.
+- **Utilisasi Online:** Persentase dan indikator bar pengguna online kini dihitung berdasarkan perbandingan antara *User Active* dan *Host Hotspot* (bukan lagi dibagi total voucher yang terdaftar).
+- **Label Nonaktif:** Teks pada lencana peringatan untuk voucher yang dinonaktifkan diubah dari "off" menjadi "Nonaktif" agar lebih mudah dipahami.
+- **Perbaikan Tata Letak:**
+  - Penyesuaian tinggi (tinggi statis `96px` dengan vertikal-tengah `box-sizing: border-box`) dan padding pada deretan kartu *System Resource* bagian atas sehingga sejajar sempurna, mencegah grid rusak (*layout reflow*).
+  - Perbaikan grafik lalu lintas (Highcharts `trafficMonitor`) yang sebelumnya tidak melebar (*full width*) di versi seluler. Memaksakan atribut `width: 100%` agar selalu mengisi penuh lebar *card-body*.
+
 #### Pembaruan Kustom (Patched by Agil) - 24-07-2026
 
 ##### 🐛 Perbaikan Bug Laporan Penjualan (ROS v6 & v7)
