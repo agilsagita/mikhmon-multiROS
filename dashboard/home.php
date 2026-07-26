@@ -159,35 +159,39 @@ if (!isset($_SESSION["mikhmon"])) {
       <div class="box bmh-75 box-bordered">
         <div class="box-group">
           <div class="box-group-icon"><i class="fa fa-server"></i></div>
-          <div class="box-group-area" style="width:100%;padding-right:6px;">
-            <?php
-            $cpuLoad  = intval($resource['cpu-load']);
-            $totalMem = intval($resource['total-memory']);
-            $freeMem  = intval($resource['free-memory']);
-            $memPct   = $totalMem > 0 ? round(($totalMem - $freeMem) / $totalMem * 100) : 0;
-            $totalHdd = intval($resource['total-hdd-space']);
-            $freeHdd  = intval($resource['free-hdd-space']);
-            $hddPct   = $totalHdd > 0 ? round(($totalHdd - $freeHdd) / $totalHdd * 100) : 0;
-            $cpuClr   = $cpuLoad >= 80 ? '#e74c3c' : ($cpuLoad >= 60 ? '#f39c12' : '#2ecc71');
-            $memClr   = $memPct  >= 80 ? '#e74c3c' : ($memPct  >= 60 ? '#f39c12' : '#2ecc71');
-            $hddClr   = $hddPct  >= 80 ? '#e74c3c' : ($hddPct  >= 60 ? '#f39c12' : '#2ecc71');
-            $bars = array(
-              array($_cpu_load,    $cpuLoad, $cpuLoad.'%',                     $cpuClr),
-              array($_free_memory, $memPct,  formatBytes($freeMem,1).' bebas',  $memClr),
-              array($_free_hdd,    $hddPct,  formatBytes($freeHdd,1).' bebas',  $hddClr),
-            );
-            foreach($bars as $b) {
-              echo "<div style='margin-bottom:5px;'>
-                <div style='display:flex;justify-content:space-between;font-size:11px;line-height:1.4;margin-bottom:2px;'>
-                  <span>".htmlspecialchars($b[0])."</span>
-                  <span style='opacity:0.7;'>".htmlspecialchars($b[2])."</span>
-                </div>
-                <div style='background:rgba(255,255,255,0.12);border-radius:4px;height:5px;overflow:hidden;'>
-                  <div style='width:".$b[1]."%;height:100%;background:".$b[3].";border-radius:4px;transition:width 0.5s;'></div>
-                </div>
-              </div>";
-            }
-            ?>
+          <div class="box-group-area">
+            <div style="width:100%; padding-right:15px;">
+              <?php
+              $cpuLoad  = intval($resource['cpu-load']);
+              $totalMem = intval($resource['total-memory']);
+              $freeMem  = intval($resource['free-memory']);
+              $memPct   = $totalMem > 0 ? round(($totalMem - $freeMem) / $totalMem * 100) : 0;
+              $totalHdd = intval($resource['total-hdd-space']);
+              $freeHdd  = intval($resource['free-hdd-space']);
+              $hddPct   = $totalHdd > 0 ? round(($totalHdd - $freeHdd) / $totalHdd * 100) : 0;
+              $cpuClr   = $cpuLoad >= 80 ? '#e74c3c' : ($cpuLoad >= 60 ? '#f39c12' : '#2ecc71');
+              $memClr   = $memPct  >= 80 ? '#e74c3c' : ($memPct  >= 60 ? '#f39c12' : '#2ecc71');
+              $hddClr   = $hddPct  >= 80 ? '#e74c3c' : ($hddPct  >= 60 ? '#f39c12' : '#2ecc71');
+              $bars = array(
+                array($_cpu_load,    $cpuLoad, $cpuLoad.'%',                     $cpuClr),
+                array($_free_memory, $memPct,  formatBytes($freeMem,1).' bebas',  $memClr),
+                array($_free_hdd,    $hddPct,  formatBytes($freeHdd,1).' bebas',  $hddClr),
+              );
+              $count = count($bars);
+              foreach($bars as $i => $b) {
+                $mb = ($i === $count - 1) ? '0' : '6px';
+                echo "<div style='margin-bottom:{$mb};'>
+                  <div style='display:flex;justify-content:space-between;font-size:12px;line-height:1.4;margin-bottom:3px;'>
+                    <span>".htmlspecialchars($b[0])."</span>
+                    <span style='opacity:0.8;'>".htmlspecialchars($b[2])."</span>
+                  </div>
+                  <div style='background:rgba(255,255,255,0.12);border-radius:4px;height:6px;overflow:hidden;'>
+                    <div style='width:".$b[1]."%;height:100%;background:".$b[3].";border-radius:4px;transition:width 0.5s;'></div>
+                  </div>
+                </div>";
+              }
+              ?>
+            </div>
           </div>
         </div>
       </div>
