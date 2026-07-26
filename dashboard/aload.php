@@ -97,7 +97,7 @@ include('../lang/'.$langid.'.php');
         <div class="box-group">
           <div class="box-group-icon"><i class="fa fa-server"></i></div>
           <div class="box-group-area">
-            <div style="width:100%; padding-right:15px;">
+            <div style="width:100%; padding-right:15px; box-sizing: border-box;">
               <?php
               $cpuLoad  = intval($resource['cpu-load']);
               $totalMem = intval($resource['total-memory']);
