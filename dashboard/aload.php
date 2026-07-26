@@ -193,7 +193,7 @@ include('../lang/'.$langid.'.php');
                       <div>
                             <i class="fa fa-users"></i> Jumlah Voucher
                             <?php if ($countdisabledusers > 0): ?>
-                            <span style="background:#e74c3c;color:#fff;border-radius:10px;font-size:10px;padding:1px 5px;margin-left:3px;" title="User dinonaktifkan"><?= $countdisabledusers ?> off</span>
+                            <span style="background:#e74c3c;color:#fff;border-radius:10px;font-size:10px;padding:1px 5px;margin-left:3px;" title="Voucher dinonaktifkan"><?= $countdisabledusers ?> Nonaktif</span>
                             <?php endif; ?>
                           </div>
                       </a>
