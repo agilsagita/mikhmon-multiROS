@@ -62,7 +62,7 @@ include('../lang/'.$langid.'.php');
     
     <div id="r_1" class="row">
       <div class="col-4">
-        <div class="box bmh-75 box-bordered" style="height: 96px;">
+        <div class="box bmh-75 box-bordered" style="min-height: 96px;">
           <div class="box-group" style="height: 100%; box-sizing: border-box;">
             <div class="box-group-icon"><i class="fa fa-calendar"></i></div>
               <div class="box-group-area">
@@ -77,7 +77,7 @@ include('../lang/'.$langid.'.php');
           </div>
         </div>
       <div class="col-4">
-        <div class="box bmh-75 box-bordered" style="height: 96px;">
+        <div class="box bmh-75 box-bordered" style="min-height: 96px;">
           <div class="box-group" style="height: 100%; box-sizing: border-box;">
           <div class="box-group-icon"><i class="fa fa-info-circle"></i></div>
               <div class="box-group-area">
@@ -93,7 +93,7 @@ include('../lang/'.$langid.'.php');
           </div>
         </div>
     <div class="col-4">
-      <div class="box bmh-75 box-bordered" style="height: 96px;">
+      <div class="box bmh-75 box-bordered" style="min-height: 96px;">
         <div class="box-group" style="height: 100%; box-sizing: border-box;">
           <div class="box-group-icon"><i class="fa fa-server"></i></div>
           <div class="box-group-area">
