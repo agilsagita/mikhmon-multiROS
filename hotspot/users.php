@@ -74,6 +74,80 @@ if (!isset($_SESSION["mikhmon"])) {
 }
 ?>
 
+<?php if (isset($_GET['del_qty']) && (int)$_GET['del_qty'] > 0): ?>
+<?php
+    $delQty   = (int)$_GET['del_qty'];
+    $delGenId = preg_replace('/[^a-zA-Z0-9_.]/', '', $_GET['gen_id'] ?? '');
+    $afterDoneUrl = './?hotspot=users&profile=' . urlencode($prof ?? 'all') . '&session=' . $session;
+?>
+<div id="del-banner" style="width:100%; padding:0 0 14px 0;">
+    <div style="background:linear-gradient(135deg,#2d0f0f,#4a1212); border:1px solid #7f1d1d; border-radius:14px; padding:18px 20px; box-shadow:0 4px 24px rgba(0,0,0,.35); color:#fff;">
+        <div style="display:flex; align-items:center; gap:12px; margin-bottom:12px;">
+            <div id="del-spinner" style="flex-shrink:0; width:36px; height:36px; border:3px solid #7f1d1d; border-top-color:#f87171; border-radius:50%; animation:spin-del .8s linear infinite;"></div>
+            <div style="flex:1;">
+                <div style="font-weight:700; font-size:15px;" id="del-title">&#128465; Proses Hapus Background Berjalan</div>
+                <div style="font-size:12px; color:#fca5a5;" id="del-subtitle">
+                    Menghapus <strong style="color:#f87171;"><?= $delQty ?></strong> user dari MikroTik...
+                </div>
+            </div>
+            <button onclick="document.getElementById('del-banner').style.display='none'"
+                style="background:none;border:none;color:#64748b;font-size:18px;cursor:pointer;padding:0;flex-shrink:0;">&#x2715;</button>
+        </div>
+        <div style="background:#1a0a0a; border-radius:6px; height:10px; overflow:hidden; margin-bottom:8px;">
+            <div id="del-bar" style="height:100%; width:0%; background:linear-gradient(90deg,#dc2626,#f87171); border-radius:6px; transition:width .4s ease;"></div>
+        </div>
+        <div style="display:flex; justify-content:space-between; font-size:11px; color:#64748b;">
+            <span id="del-count">0 / <?= $delQty ?> user</span>
+            <span id="del-pct">0%</span>
+        </div>
+    </div>
+</div>
+<style>@keyframes spin-del{to{transform:rotate(360deg)}}</style>
+<script>
+(function () {
+    var genId   = '<?= addslashes($delGenId) ?>';
+    var total   = <?= $delQty ?>;
+    var doneUrl = '<?= addslashes($afterDoneUrl) ?>';
+    if (!genId) return;
+
+    function poll() {
+        fetch('./process/genstatus.php?gen_id=' + encodeURIComponent(genId) + '&session=<?= $session ?>')
+            .then(function(r){ return r.json(); })
+            .then(function(data) {
+                var done = data.done || 0;
+                var pct  = total > 0 ? Math.round((done / total) * 100) : 0;
+                document.getElementById('del-bar').style.width   = pct + '%';
+                document.getElementById('del-count').textContent = done + ' / ' + total + ' user';
+                document.getElementById('del-pct').textContent   = pct + '%';
+                document.getElementById('del-subtitle').innerHTML =
+                    'Menghapus <strong style="color:#f87171;">' + done + '</strong> dari <strong style="color:#f87171;">' + total + '</strong> user...';
+
+                if (data.status === 'done') {
+                    var sp = document.getElementById('del-spinner');
+                    sp.style.background = '#22c55e'; sp.style.border = 'none';
+                    sp.style.animation  = 'none'; sp.innerHTML = '&#10003;';
+                    sp.style.display = 'flex'; sp.style.alignItems = 'center';
+                    sp.style.justifyContent = 'center'; sp.style.fontSize = '18px';
+                    sp.style.fontWeight = '700'; sp.style.borderRadius = '50%';
+                    document.getElementById('del-title').textContent = '✅ Selesai! User berhasil dihapus';
+                    document.getElementById('del-subtitle').innerHTML =
+                        'Semua <strong style="color:#4ade80;">' + total + '</strong> user telah dihapus dari MikroTik.';
+                    document.getElementById('del-bar').style.width      = '100%';
+                    document.getElementById('del-bar').style.background = '#22c55e';
+                    document.getElementById('del-count').textContent    = total + ' / ' + total + ' user';
+                    document.getElementById('del-pct').textContent      = '100%';
+                    setTimeout(function() { window.location.href = doneUrl; }, 2000);
+                } else {
+                    setTimeout(poll, 3000);
+                }
+            })
+            .catch(function() { setTimeout(poll, 5000); });
+    }
+    setTimeout(poll, 3000);
+})();
+</script>
+<?php endif; ?>
+
 <div class="row">
 <div class="col-12">
 <div class="card">

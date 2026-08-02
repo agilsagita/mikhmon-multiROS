@@ -89,6 +89,12 @@ Project ini telah dilengkapi dengan konfigurasi Docker Compose untuk memudahkan 
 
 ## 🔄 Riwayat Perubahan (Changelog)
 
+#### Pembaruan Kustom (Patched by Agil) - 03-08-2026
+##### 🚀 Proses Background (Generate & Remove User)
+- **Generate Voucher Background:** Proses pembuatan (*generate*) voucher dalam jumlah besar kini dilakukan di background (`genstatus.php`). Antarmuka kini menampilkan halaman loading dan polling status, mencegah *timeout* koneksi PHP saat membuat banyak voucher.
+- **Hapus User Background:** Penghapusan user massal (berdasarkan profil, komentar, atau expired) kini menggunakan sistem proses *background* agar browser tidak terhenti (*freeze*) saat mengirim banyak perintah ke API MikroTik.
+- **Peningkatan Batasan:** Menaikkan limit maksimal *generate user* di `config.php` seiring dengan peningkatan performa proses asinkron.
+
 #### Pembaruan Kustom (Patched by Agil) - 26-07-2026
 ##### 📊 Dasbor & Metrik Hotspot
 - **Penyesuaian Metrik:** Mengubah teks label kartu "Pengguna Hotspot" menjadi "Jumlah Voucher".
