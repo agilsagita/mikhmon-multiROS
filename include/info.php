@@ -1,5 +1,5 @@
 <div class="mikhmon-mod-footer">
-  <span>MIKHMON v3.20 Patched (Multi-ROS)</span>
+  <span>MIKHMON v3.20.1 Patched (Multi-ROS)</span>
   <span class="separator">&bull;</span>
   <span>mod by <a href="https://agil.web.id" target="_blank">agil</a></span>
   <span class="separator">&bull;</span>

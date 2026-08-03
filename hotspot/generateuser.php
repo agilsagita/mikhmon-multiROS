@@ -108,123 +108,22 @@ if (!isset($_SESSION["mikhmon"])) {
 		$a = array("1" => "", "", 1, 2, 2, 3, 3, 4);
 
 		if ($user == "up") {
+			$used_u = array();
 			for ($i = 1; $i <= $qty; $i++) {
-				if ($char == "lower") {
-					$u[$i] = randLC($userl);
-				} elseif ($char == "upper") {
-					$u[$i] = randUC($userl);
-				} elseif ($char == "upplow") {
-					$u[$i] = randULC($userl);
-				} elseif ($char == "mix") {
-					$u[$i] = randNLC($userl);
-				} elseif ($char == "mix1") {
-					$u[$i] = randNUC($userl);
-				} elseif ($char == "mix2") {
-					$u[$i] = randNULC($userl);
-				}
-				if ($userl == 3) {
-					$p[$i] = randN(3);
-				} elseif ($userl == 4) {
-					$p[$i] = randN(4);
-				} elseif ($userl == 5) {
-					$p[$i] = randN(5);
-				} elseif ($userl == 6) {
-					$p[$i] = randN(6);
-				} elseif ($userl == 7) {
-					$p[$i] = randN(7);
-				} elseif ($userl == 8) {
-					$p[$i] = randN(8);
-				}
-
-				$u[$i] = "$prefix$u[$i]";
-			}
-
-			// Gunakan fastcgi_finish_request() untuk menutup koneksi nginx
-			// sementara PHP tetap berjalan di background (khusus PHP-FPM)
-			$gen_id = uniqid('gs_', true);
-			$statusFile = './voucher/genstat_' . $gen_id . '.json';
-			$redirectUrl = ($qty < 2)
-				? './?hotspot-user=' . $u[1] . '&session=' . $session . '&gen_qty=' . $qty . '&gen_id=' . $gen_id
-				: './?hotspot-user=generate&session=' . $session . '&gen_qty=' . $qty . '&gen_id=' . $gen_id;
-			// Tampilkan halaman loading proper selama 2 detik, lalu redirect
-			$loadingHtml = '<!DOCTYPE html><html><head><meta charset="UTF-8">
-<meta http-equiv="refresh" content="2;url=' . $redirectUrl . '">
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{background:#0f172a;display:flex;align-items:center;justify-content:center;min-height:100vh;font-family:sans-serif}
-.card{background:#1e293b;border-radius:16px;padding:40px 48px;text-align:center;box-shadow:0 8px 40px rgba(0,0,0,.5);max-width:400px;width:90%}
-.spinner{width:56px;height:56px;border:4px solid #334155;border-top-color:#38bdf8;border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 24px}
-@keyframes spin{to{transform:rotate(360deg)}}
-h3{color:#f1f5f9;font-size:20px;margin-bottom:8px}
-.sub{color:#94a3b8;font-size:14px;margin-bottom:20px;line-height:1.6}
-.qty{display:inline-block;background:#0f172a;color:#38bdf8;font-size:28px;font-weight:700;padding:8px 24px;border-radius:8px;margin-bottom:8px}
-.label{color:#64748b;font-size:12px}
-.info{margin-top:20px;background:#0f172a;border-radius:8px;padding:10px 14px;color:#22d3ee;font-size:11px;line-height:1.5}
-</style></head>
-<body><div class="card">
-<div class="spinner"></div>
-<h3>&#9881; Sedang Memproses Voucher</h3>
-<p class="sub">Mengirim data ke MikroTik...<br>Halaman akan otomatis diarahkan dalam 2 detik.</p>
-<div class="qty">' . $qty . '</div><br>
-<span class="label">voucher sedang dibuat</span>
-<div class="info">&#9432; Proses berlanjut di background. Jangan tutup tab ini.</div>
-</div></body></html>';
-			while (ob_get_level() > 0) {
-				ob_end_clean();
-			}
-			// Tulis status awal sebelum fastcgi_finish_request
-			file_put_contents($statusFile, json_encode(['status' => 'processing', 'done' => 0, 'total' => (int) $qty]));
-			echo $loadingHtml;
-			session_write_close();
-			if (function_exists('fastcgi_finish_request')) {
-				fastcgi_finish_request(); // PHP-FPM: tutup koneksi nginx, PHP tetap jalan
-			} else {
-				flush();
-			}
-
-			for ($i = 1; $i <= $qty; $i++) {
-				$API->comm("/ip/hotspot/user/add", array(
-					"server" => "$server",
-					"name" => "$u[$i]",
-					"password" => "$p[$i]",
-					"profile" => "$profile",
-					"limit-uptime" => "$timelimit",
-					"limit-bytes-total" => "$datalimit",
-					"comment" => "$commt",
-				));
-				// Update status setiap 10 voucher
-				if ($i % 10 === 0 || $i === (int) $qty) {
-					file_put_contents($statusFile, json_encode(['status' => 'processing', 'done' => $i, 'total' => (int) $qty]));
-				}
-			}
-			// Tandai selesai
-			file_put_contents($statusFile, json_encode(['status' => 'done', 'done' => (int) $qty, 'total' => (int) $qty]));
-			exit;
-		}
-
-		if ($user == "vc") {
-			$shuf = ($userl - $a[$userl]);
-			for ($i = 1; $i <= $qty; $i++) {
-				if ($char == "lower") {
-					$u[$i] = randLC($shuf);
-				} elseif ($char == "upper") {
-					$u[$i] = randUC($shuf);
-				} elseif ($char == "upplow") {
-					$u[$i] = randULC($shuf);
-				}
-				if ($userl == 3) {
-					$p[$i] = randN(1);
-				} elseif ($userl == 4 || $userl == 5) {
-					$p[$i] = randN(2);
-				} elseif ($userl == 6 || $userl == 7) {
-					$p[$i] = randN(3);
-				} elseif ($userl == 8) {
-					$p[$i] = randN(4);
-				}
-
-				$u[$i] = "$prefix$u[$i]$p[$i]";
-
-				if ($char == "num") {
+				do {
+					if ($char == "lower") {
+						$u[$i] = randLC($userl);
+					} elseif ($char == "upper") {
+						$u[$i] = randUC($userl);
+					} elseif ($char == "upplow") {
+						$u[$i] = randULC($userl);
+					} elseif ($char == "mix") {
+						$u[$i] = randNLC($userl);
+					} elseif ($char == "mix1") {
+						$u[$i] = randNUC($userl);
+					} elseif ($char == "mix2") {
+						$u[$i] = randNULC($userl);
+					}
 					if ($userl == 3) {
 						$p[$i] = randN(3);
 					} elseif ($userl == 4) {
@@ -239,27 +138,151 @@ h3{color:#f1f5f9;font-size:20px;margin-bottom:8px}
 						$p[$i] = randN(8);
 					}
 
-					$u[$i] = "$prefix$p[$i]";
+					$u[$i] = "$prefix$u[$i]";
+				} while (isset($used_u[$u[$i]]));
+				$used_u[$u[$i]] = true;
+			}
+
+			// Gunakan fastcgi_finish_request() untuk menutup koneksi nginx
+			// sementara PHP tetap berjalan di background (khusus PHP-FPM)
+			$gen_id = uniqid('gs_', true);
+			$statusFile = './voucher/genstat_' . $gen_id . '.json';
+			$redirectUrl = ($qty < 2)
+				? './?hotspot-user=' . $u[1] . '&session=' . $session . '&gen_qty=' . $qty . '&gen_id=' . $gen_id
+				: './?hotspot-user=generate&session=' . $session . '&gen_qty=' . $qty . '&gen_id=' . $gen_id;
+			// Tampilkan halaman loading proper selama 2 detik, lalu redirect
+			$loadingHtml = '<div style="position:fixed;top:0;left:0;width:100vw;height:100vh;background:#0f172a;z-index:999999;display:flex;align-items:center;justify-content:center;font-family:sans-serif;">
+<div style="background:#1e293b;border-radius:16px;padding:40px 48px;text-align:center;box-shadow:0 8px 40px rgba(0,0,0,.5);max-width:400px;width:90%;color:#fff;">
+<div style="width:56px;height:56px;border:4px solid #334155;border-top-color:#38bdf8;border-radius:50%;animation:bg-proc-spin 0.8s linear infinite;margin:0 auto 24px;"></div>
+<h3 style="color:#f1f5f9;font-size:20px;margin-bottom:8px;">&#9881; Sedang Memproses Voucher</h3>
+<p style="color:#94a3b8;font-size:14px;margin-bottom:20px;line-height:1.6;">Mengirim data ke MikroTik...<br>Halaman akan otomatis diarahkan...</p>
+<div style="display:inline-block;background:#0f172a;color:#38bdf8;font-size:28px;font-weight:700;padding:8px 24px;border-radius:8px;margin-bottom:8px;">' . $qty . '</div><br>
+<span style="color:#64748b;font-size:12px;">voucher sedang dibuat</span>
+<div style="margin-top:20px;background:#0f172a;border-radius:8px;padding:10px 14px;color:#22d3ee;font-size:11px;line-height:1.5;">&#9432; Proses berlanjut di background. Jangan tutup tab ini.</div>
+</div></div>
+<style>@keyframes bg-proc-spin{to{transform:rotate(360deg)}}</style>
+<script>setTimeout(function(){ window.location.href = "' . $redirectUrl . '"; }, 800);</script>';
+			while (ob_get_level() > 0) {
+				ob_end_clean();
+			}
+			// Tulis status awal sebelum fastcgi_finish_request
+			file_put_contents($statusFile, json_encode(['status' => 'processing', 'done' => 0, 'total' => (int) $qty]));
+			echo $loadingHtml;
+			session_write_close();
+			if (function_exists('fastcgi_finish_request')) {
+				fastcgi_finish_request(); // PHP-FPM: tutup koneksi nginx, PHP tetap jalan
+			} else {
+				flush();
+			}
+
+			for ($i = 1; $i <= $qty; $i++) {
+				$res = $API->comm("/ip/hotspot/user/add", array(
+					"server" => "$server",
+					"name" => "$u[$i]",
+					"password" => "$p[$i]",
+					"profile" => "$profile",
+					"limit-uptime" => "$timelimit",
+					"limit-bytes-total" => "$datalimit",
+					"comment" => "$commt",
+				));
+
+				// Jika username bentrok di MikroTik, coba regenerate username baru
+				if (isset($res['!trap']) || (is_array($res) && isset($res[0]['!trap']))) {
+					for ($retry = 0; $retry < 5; $retry++) {
+						if ($char == "lower") { $new_u = randLC($userl); }
+						elseif ($char == "upper") { $new_u = randUC($userl); }
+						elseif ($char == "upplow") { $new_u = randULC($userl); }
+						elseif ($char == "mix") { $new_u = randNLC($userl); }
+						elseif ($char == "mix1") { $new_u = randNUC($userl); }
+						elseif ($char == "mix2") { $new_u = randNULC($userl); }
+						else { $new_u = randLC($userl); }
+						$new_u = "$prefix$new_u";
+						if (isset($used_u[$new_u])) continue;
+						$used_u[$new_u] = true;
+						$u[$i] = $new_u;
+						$res2 = $API->comm("/ip/hotspot/user/add", array(
+							"server" => "$server",
+							"name" => "$u[$i]",
+							"password" => "$p[$i]",
+							"profile" => "$profile",
+							"limit-uptime" => "$timelimit",
+							"limit-bytes-total" => "$datalimit",
+							"comment" => "$commt",
+						));
+						if (!isset($res2['!trap']) && (!is_array($res2) || !isset($res2[0]['!trap']))) {
+							break;
+						}
+					}
 				}
-				if ($char == "mix") {
-					$p[$i] = randNLC($userl);
 
-
-					$u[$i] = "$prefix$p[$i]";
+				// Update status setiap 10 voucher
+				if ($i % 10 === 0 || $i === (int) $qty) {
+					file_put_contents($statusFile, json_encode(['status' => 'processing', 'done' => $i, 'total' => (int) $qty]));
 				}
-				if ($char == "mix1") {
-					$p[$i] = randNUC($userl);
+			}
+			// Tandai selesai
+			file_put_contents($statusFile, json_encode(['status' => 'done', 'done' => (int) $qty, 'total' => (int) $qty]));
+			exit;
+		}
 
+		if ($user == "vc") {
+			$used_u = array();
+			$shuf = ($userl - $a[$userl]);
+			for ($i = 1; $i <= $qty; $i++) {
+				do {
+					if ($char == "lower") {
+						$u[$i] = randLC($shuf);
+					} elseif ($char == "upper") {
+						$u[$i] = randUC($shuf);
+					} elseif ($char == "upplow") {
+						$u[$i] = randULC($shuf);
+					}
+					if ($userl == 3) {
+						$p[$i] = randN(1);
+					} elseif ($userl == 4 || $userl == 5) {
+						$p[$i] = randN(2);
+					} elseif ($userl == 6 || $userl == 7) {
+						$p[$i] = randN(3);
+					} elseif ($userl == 8) {
+						$p[$i] = randN(4);
+					}
 
-					$u[$i] = "$prefix$p[$i]";
-				}
-				if ($char == "mix2") {
-					$p[$i] = randNULC($userl);
+					$u[$i] = "$prefix$u[$i]$p[$i]";
 
+					if ($char == "num") {
+						if ($userl == 3) {
+							$p[$i] = randN(3);
+						} elseif ($userl == 4) {
+							$p[$i] = randN(4);
+						} elseif ($userl == 5) {
+							$p[$i] = randN(5);
+						} elseif ($userl == 6) {
+							$p[$i] = randN(6);
+						} elseif ($userl == 7) {
+							$p[$i] = randN(7);
+						} elseif ($userl == 8) {
+							$p[$i] = randN(8);
+						}
 
-					$u[$i] = "$prefix$p[$i]";
-				}
+						$u[$i] = "$prefix$p[$i]";
+					}
+					if ($char == "mix") {
+						$p[$i] = randNLC($userl);
 
+						$u[$i] = "$prefix$p[$i]";
+					}
+					if ($char == "mix1") {
+						$p[$i] = randNUC($userl);
+
+						$u[$i] = "$prefix$p[$i]";
+					}
+					if ($char == "mix2") {
+						$p[$i] = randNULC($userl);
+
+						$u[$i] = "$prefix$p[$i]";
+					}
+				} while (isset($used_u[$u[$i]]));
+				$used_u[$u[$i]] = true;
 			}
 			// Gunakan fastcgi_finish_request() untuk menutup koneksi nginx
 			// sementara PHP tetap berjalan di background (khusus PHP-FPM)
@@ -269,28 +292,17 @@ h3{color:#f1f5f9;font-size:20px;margin-bottom:8px}
 				? './?hotspot-user=' . $u[1] . '&session=' . $session . '&gen_qty=' . $qty . '&gen_id=' . $gen_id
 				: './?hotspot-user=generate&session=' . $session . '&gen_qty=' . $qty . '&gen_id=' . $gen_id;
 			// Tampilkan halaman loading proper selama 2 detik, lalu redirect
-			$loadingHtml = '<!DOCTYPE html><html><head><meta charset="UTF-8">
-<meta http-equiv="refresh" content="2;url=' . $redirectUrl . '">
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{background:#0f172a;display:flex;align-items:center;justify-content:center;min-height:100vh;font-family:sans-serif}
-.card{background:#1e293b;border-radius:16px;padding:40px 48px;text-align:center;box-shadow:0 8px 40px rgba(0,0,0,.5);max-width:400px;width:90%}
-.spinner{width:56px;height:56px;border:4px solid #334155;border-top-color:#38bdf8;border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 24px}
-@keyframes spin{to{transform:rotate(360deg)}}
-h3{color:#f1f5f9;font-size:20px;margin-bottom:8px}
-.sub{color:#94a3b8;font-size:14px;margin-bottom:20px;line-height:1.6}
-.qty{display:inline-block;background:#0f172a;color:#38bdf8;font-size:28px;font-weight:700;padding:8px 24px;border-radius:8px;margin-bottom:8px}
-.label{color:#64748b;font-size:12px}
-.info{margin-top:20px;background:#0f172a;border-radius:8px;padding:10px 14px;color:#22d3ee;font-size:11px;line-height:1.5}
-</style></head>
-<body><div class="card">
-<div class="spinner"></div>
-<h3>&#9881; Sedang Memproses Voucher</h3>
-<p class="sub">Mengirim data ke MikroTik...<br>Halaman akan otomatis diarahkan dalam 2 detik.</p>
-<div class="qty">' . $qty . '</div><br>
-<span class="label">voucher sedang dibuat</span>
-<div class="info">&#9432; Proses berlanjut di background. Jangan tutup tab ini.</div>
-</div></body></html>';
+			$loadingHtml = '<div style="position:fixed;top:0;left:0;width:100vw;height:100vh;background:#0f172a;z-index:999999;display:flex;align-items:center;justify-content:center;font-family:sans-serif;">
+<div style="background:#1e293b;border-radius:16px;padding:40px 48px;text-align:center;box-shadow:0 8px 40px rgba(0,0,0,.5);max-width:400px;width:90%;color:#fff;">
+<div style="width:56px;height:56px;border:4px solid #334155;border-top-color:#38bdf8;border-radius:50%;animation:bg-proc-spin 0.8s linear infinite;margin:0 auto 24px;"></div>
+<h3 style="color:#f1f5f9;font-size:20px;margin-bottom:8px;">&#9881; Sedang Memproses Voucher</h3>
+<p style="color:#94a3b8;font-size:14px;margin-bottom:20px;line-height:1.6;">Mengirim data ke MikroTik...<br>Halaman akan otomatis diarahkan...</p>
+<div style="display:inline-block;background:#0f172a;color:#38bdf8;font-size:28px;font-weight:700;padding:8px 24px;border-radius:8px;margin-bottom:8px;">' . $qty . '</div><br>
+<span style="color:#64748b;font-size:12px;">voucher sedang dibuat</span>
+<div style="margin-top:20px;background:#0f172a;border-radius:8px;padding:10px 14px;color:#22d3ee;font-size:11px;line-height:1.5;">&#9432; Proses berlanjut di background. Jangan tutup tab ini.</div>
+</div></div>
+<style>@keyframes bg-proc-spin{to{transform:rotate(360deg)}}</style>
+<script>setTimeout(function(){ window.location.href = "' . $redirectUrl . '"; }, 800);</script>';
 			while (ob_get_level() > 0) {
 				ob_end_clean();
 			}
@@ -306,7 +318,7 @@ h3{color:#f1f5f9;font-size:20px;margin-bottom:8px}
 			}
 
 			for ($i = 1; $i <= $qty; $i++) {
-				$API->comm("/ip/hotspot/user/add", array(
+				$res = $API->comm("/ip/hotspot/user/add", array(
 					"server" => "$server",
 					"name" => "$u[$i]",
 					"password" => "$u[$i]",
@@ -315,6 +327,37 @@ h3{color:#f1f5f9;font-size:20px;margin-bottom:8px}
 					"limit-bytes-total" => "$datalimit",
 					"comment" => "$commt",
 				));
+
+				// Jika username bentrok di MikroTik, coba regenerate username baru
+				if (isset($res['!trap']) || (is_array($res) && isset($res[0]['!trap']))) {
+					for ($retry = 0; $retry < 5; $retry++) {
+						if ($char == "lower") { $new_u = "$prefix" . randLC($shuf) . randN(min(3, max(1, $userl - $shuf))); }
+						elseif ($char == "upper") { $new_u = "$prefix" . randUC($shuf) . randN(min(3, max(1, $userl - $shuf))); }
+						elseif ($char == "upplow") { $new_u = "$prefix" . randULC($shuf) . randN(min(3, max(1, $userl - $shuf))); }
+						elseif ($char == "num") { $new_u = "$prefix" . randN($userl); }
+						elseif ($char == "mix") { $new_u = "$prefix" . randNLC($userl); }
+						elseif ($char == "mix1") { $new_u = "$prefix" . randNUC($userl); }
+						elseif ($char == "mix2") { $new_u = "$prefix" . randNULC($userl); }
+						else { $new_u = "$prefix" . randNULC($userl); }
+
+						if (isset($used_u[$new_u])) continue;
+						$used_u[$new_u] = true;
+						$u[$i] = $new_u;
+						$res2 = $API->comm("/ip/hotspot/user/add", array(
+							"server" => "$server",
+							"name" => "$u[$i]",
+							"password" => "$u[$i]",
+							"profile" => "$profile",
+							"limit-uptime" => "$timelimit",
+							"limit-bytes-total" => "$datalimit",
+							"comment" => "$commt",
+						));
+						if (!isset($res2['!trap']) && (!is_array($res2) || !isset($res2[0]['!trap']))) {
+							break;
+						}
+					}
+				}
+
 				// Update status setiap 10 voucher
 				if ($i % 10 === 0 || $i === (int) $qty) {
 					file_put_contents($statusFile, json_encode(['status' => 'processing', 'done' => $i, 'total' => (int) $qty]));

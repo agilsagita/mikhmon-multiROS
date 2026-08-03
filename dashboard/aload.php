@@ -62,7 +62,7 @@ include('../lang/'.$langid.'.php');
     
     <div id="r_1" class="row">
       <div class="col-4">
-        <div class="box bmh-75 box-bordered" style="min-height: 96px;">
+        <div class="box bmh-75 box-bordered" style="min-height: 114px;">
           <div class="box-group" style="height: 100%; box-sizing: border-box;">
             <div class="box-group-icon"><i class="fa fa-calendar"></i></div>
               <div class="box-group-area">
@@ -77,7 +77,7 @@ include('../lang/'.$langid.'.php');
           </div>
         </div>
       <div class="col-4">
-        <div class="box bmh-75 box-bordered" style="min-height: 96px;">
+        <div class="box bmh-75 box-bordered" style="min-height: 114px;">
           <div class="box-group" style="height: 100%; box-sizing: border-box;">
           <div class="box-group-icon"><i class="fa fa-info-circle"></i></div>
               <div class="box-group-area">
@@ -93,7 +93,7 @@ include('../lang/'.$langid.'.php');
           </div>
         </div>
     <div class="col-4">
-      <div class="box bmh-75 box-bordered" style="min-height: 96px;">
+      <div class="box bmh-75 box-bordered" style="min-height: 114px;">
         <div class="box-group" style="height: 100%; box-sizing: border-box;">
           <div class="box-group-icon"><i class="fa fa-server"></i></div>
           <div class="box-group-area">
@@ -164,7 +164,7 @@ include('../lang/'.$langid.'.php');
   $utilPct = intval($counthotspothost) > 0
     ? round((intval($counthotspotactive) / intval($counthotspothost)) * 100, 1)
     : 0;
-  $utilClr = $utilPct >= 80 ? '#e74c3c' : ($utilPct >= 50 ? '#f39c12' : '#3498db');
+  $utilClr = $utilPct >= 80 ? '#2ecc71' : ($utilPct >= 50 ? '#f39c12' : '#e74c3c');
 
   ?>
     
@@ -184,7 +184,21 @@ include('../lang/'.$langid.'.php');
                         </a>
                       </div>
                     </div>
-                    <div class="col-3 col-box-6">
+                  <div class="col-3 col-box-6">
+                    <div class="box bg-yellow bmh-75">
+                      <a href="./?hotspot=hosts&session=<?= $session; ?>">
+                        <div>
+                          <h1><?= $counthotspothost; ?>
+                              <span style="font-size: 15px;">items</span>
+                          </h1>
+                        </div>
+                        <div>
+                            <i class="fa fa-users"></i> Perangkat Terhubung
+                        </div>
+                      </a>
+                    </div>
+                  </div>
+                  <div class="col-3 col-box-6">
                     <div class="box bg-green bmh-75">
                       <a href="./?hotspot=users&profile=all&session=<?= $session; ?>">
                             <h1><?= $countallusers; ?>
@@ -196,20 +210,6 @@ include('../lang/'.$langid.'.php');
                             <span style="background:#e74c3c;color:#fff;border-radius:10px;font-size:10px;padding:1px 5px;margin-left:3px;" title="Voucher dinonaktifkan"><?= $countdisabledusers ?> Nonaktif</span>
                             <?php endif; ?>
                           </div>
-                      </a>
-                    </div>
-                  </div>
-                  <div class="col-3 col-box-6">
-                    <div class="box bg-yellow bmh-75">
-                      <a href="./?hotspot=hosts&session=<?= $session; ?>">
-                        <div>
-                          <h1><?= $counthotspothost; ?>
-                              <span style="font-size: 15px;">items</span>
-                          </h1>
-                        </div>
-                        <div>
-                            <i class="fa fa-users"></i> Host Hotspot
-                        </div>
                       </a>
                     </div>
                   </div>

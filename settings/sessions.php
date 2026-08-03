@@ -82,32 +82,38 @@ if (!isset($_SESSION["mikhmon"])) {
               foreach (file('./include/config.php') as $line) {
                 $value = explode("'", $line)[1];
                 if ($value == "" || $value == "mikhmon") {
-                } else { ?>
-                    <div class="col-12">
-                        <div class="box bmh-75 box-bordered <?= $color[rand(1, 11)]; ?>">
-                                <div class="box-group">
-                                  
-                                  <div class="box-group-icon">
-                                    <span class="connect pointer" id="<?= $value; ?>">
+                 } else { 
+                    $hsName = explode('%', $data[$value][4])[1] ?? $value;
+                  ?>
+                    <div class="col-12" style="margin-bottom: 12px;">
+                        <div style="background: linear-gradient(135deg, rgba(30, 41, 59, 0.7), rgba(15, 23, 42, 0.8)); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 14px; padding: 16px 20px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25); display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;">
+                            <div style="display: flex; align-items: center; gap: 14px; min-width: 200px;">
+                                <div class="connect pointer" id="<?= $value; ?>" style="width: 44px; height: 44px; border-radius: 12px; background: rgba(99, 102, 241, 0.15); border: 1px solid rgba(99, 102, 241, 0.3); display: flex; align-items: center; justify-content: center; color: #818cf8; font-size: 18px; transition: all 0.2s;" title="<?= $_open ?>">
                                     <i class="fa fa-server"></i>
-                                    </span>
-                                  </div>
-                                
-                                  <div class="box-group-area">
-                                    <span>
-                                      <?= $_hotspot_name ?> : <?= explode('%', $data[$value][4])[1]; ?><br>
-                                      <?= $_session_name ?> : <?= $value; ?><br>
-                                      <span class="connect pointer"  id="<?= $value; ?>"><i class="fa fa-external-link"></i> <?= $_open ?></span>&nbsp;
-                                      <a href="./admin.php?id=settings&session=<?= $value; ?>"><i class="fa fa-edit"></i> <?= $_edit ?></a>&nbsp;
-                                      <a href="javascript:void(0)" onclick="if(confirm('Are you sure to delete data <?= $value;
-                                      echo " (" . explode('%', $data[$value][4])[1] . ")"; ?>?')){loadpage('./admin.php?id=remove-session&session=<?= $value; ?>')}else{}"><i class="fa fa-remove"></i> <?= $_delete ?></a>
-                                    </span>
-
-                                  </div>
                                 </div>
-                              
+                                <div>
+                                    <div style="font-weight: 700; font-size: 15px; color: #f8fafc; line-height: 1.3; margin-bottom: 4px;">
+                                        <?= htmlspecialchars($hsName); ?>
+                                    </div>
+                                    <div style="display: inline-flex; align-items: center; gap: 6px; font-size: 11px; color: #94a3b8; background: rgba(255,255,255,0.05); padding: 2px 8px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.06);">
+                                        <span><?= $_session_name ?>:</span>
+                                        <strong style="color: #cbd5e1;"><?= htmlspecialchars($value); ?></strong>
+                                    </div>
+                                </div>
                             </div>
-                          </div>
+                            <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                                <button class="connect pointer" id="<?= $value; ?>" style="display: inline-flex; align-items: center; gap: 6px; background: linear-gradient(135deg, #4f46e5, #3730a3); color: #ffffff; border: none; padding: 7px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s; box-shadow: 0 2px 10px rgba(79, 70, 229, 0.3);">
+                                    <i class="fa fa-external-link"></i> <?= $_open ?>
+                                </button>
+                                <a href="./admin.php?id=settings&session=<?= $value; ?>" style="display: inline-flex; align-items: center; gap: 6px; background: rgba(255, 255, 255, 0.06); color: #e2e8f0; border: 1px solid rgba(255, 255, 255, 0.1); padding: 6px 13px; border-radius: 8px; font-size: 12px; font-weight: 500; text-decoration: none; transition: all 0.2s;">
+                                    <i class="fa fa-edit"></i> <?= $_edit ?>
+                                </a>
+                                <a href="javascript:void(0)" onclick="if(confirm('Are you sure to delete data <?= $value; echo " (" . addslashes($hsName) . ")"; ?>?')){loadpage('./admin.php?id=remove-session&session=<?= $value; ?>')}else{}" style="display: inline-flex; align-items: center; gap: 6px; background: rgba(239, 68, 68, 0.1); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.2); padding: 6px 13px; border-radius: 8px; font-size: 12px; font-weight: 500; text-decoration: none; transition: all 0.2s;">
+                                    <i class="fa fa-trash"></i> <?= $_delete ?>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
               <?php
             }
           }

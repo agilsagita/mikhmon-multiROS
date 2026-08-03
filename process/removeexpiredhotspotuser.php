@@ -48,28 +48,17 @@ $gen_id     = uniqid('del_', true);
 $statusFile = './voucher/genstat_' . $gen_id . '.json';
 $redirectUrl .= '&del_qty=' . $TotalReg . '&gen_id=' . $gen_id;
 
-$loadingHtml = '<!DOCTYPE html><html><head><meta charset="UTF-8">
-<meta http-equiv="refresh" content="2;url=' . $redirectUrl . '">
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{background:#0f172a;display:flex;align-items:center;justify-content:center;min-height:100vh;font-family:sans-serif}
-.card{background:#1e293b;border-radius:16px;padding:40px 48px;text-align:center;box-shadow:0 8px 40px rgba(0,0,0,.5);max-width:400px;width:90%}
-.spinner{width:56px;height:56px;border:4px solid #334155;border-top-color:#f87171;border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 24px}
-@keyframes spin{to{transform:rotate(360deg)}}
-h3{color:#f1f5f9;font-size:20px;margin-bottom:8px}
-.sub{color:#94a3b8;font-size:14px;margin-bottom:20px;line-height:1.6}
-.qty{display:inline-block;background:#0f172a;color:#f87171;font-size:28px;font-weight:700;padding:8px 24px;border-radius:8px;margin-bottom:8px}
-.label{color:#64748b;font-size:12px}
-.info{margin-top:20px;background:#0f172a;border-radius:8px;padding:10px 14px;color:#f87171;font-size:11px;line-height:1.5}
-</style></head>
-<body><div class="card">
-<div class="spinner"></div>
-<h3>&#128465; Sedang Menghapus User Expired</h3>
-<p class="sub">Menghapus data dari MikroTik...<br>Halaman akan otomatis diarahkan dalam 2 detik.</p>
-<div class="qty">' . $TotalReg . '</div><br>
-<span class="label">user sedang dihapus</span>
-<div class="info">&#9432; Proses berlanjut di background. Jangan tutup tab ini.</div>
-</div></body></html>';
+$loadingHtml = '<div style="position:fixed;top:0;left:0;width:100vw;height:100vh;background:#0f172a;z-index:999999;display:flex;align-items:center;justify-content:center;font-family:sans-serif;">
+<div style="background:#1e293b;border-radius:16px;padding:40px 48px;text-align:center;box-shadow:0 8px 40px rgba(0,0,0,.5);max-width:400px;width:90%;color:#fff;">
+<div style="width:56px;height:56px;border:4px solid #334155;border-top-color:#f87171;border-radius:50%;animation:bg-proc-spin 0.8s linear infinite;margin:0 auto 24px;"></div>
+<h3 style="color:#f1f5f9;font-size:20px;margin-bottom:8px;">&#128465; Sedang Menghapus User Expired</h3>
+<p style="color:#94a3b8;font-size:14px;margin-bottom:20px;line-height:1.6;">Menghapus data dari MikroTik...<br>Halaman akan otomatis diarahkan...</p>
+<div style="display:inline-block;background:#0f172a;color:#f87171;font-size:28px;font-weight:700;padding:8px 24px;border-radius:8px;margin-bottom:8px;">' . $TotalReg . '</div><br>
+<span style="color:#64748b;font-size:12px;">user sedang dihapus</span>
+<div style="margin-top:20px;background:#0f172a;border-radius:8px;padding:10px 14px;color:#f87171;font-size:11px;line-height:1.5;">&#9432; Proses berlanjut di background. Jangan tutup tab ini.</div>
+</div></div>
+<style>@keyframes bg-proc-spin{to{transform:rotate(360deg)}}</style>
+<script>setTimeout(function(){ window.location.href = "' . $redirectUrl . '"; }, 800);</script>';
 
 while (ob_get_level() > 0) {
     ob_end_clean();

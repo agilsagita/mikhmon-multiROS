@@ -89,11 +89,18 @@ Project ini telah dilengkapi dengan konfigurasi Docker Compose untuk memudahkan 
 
 ## 🔄 Riwayat Perubahan (Changelog)
 
-#### Pembaruan Kustom (Patched by Agil) - 03-08-2026
+#### Pembaruan Kustom (Patched by Agil) v3.20.1 - 08-03-2026
 ##### 🚀 Proses Background (Generate & Remove User)
 - **Generate Voucher Background:** Proses pembuatan (*generate*) voucher dalam jumlah besar kini dilakukan di background (`genstatus.php`). Antarmuka kini menampilkan halaman loading dan polling status, mencegah *timeout* koneksi PHP saat membuat banyak voucher.
 - **Hapus User Background:** Penghapusan user massal (berdasarkan profil, komentar, atau expired) kini menggunakan sistem proses *background* agar browser tidak terhenti (*freeze*) saat mengirim banyak perintah ke API MikroTik.
-- **Peningkatan Batasan:** Menaikkan limit maksimal *generate user* di `config.php` seiring dengan peningkatan performa proses asinkron.
+- **Isolasi Overlay Loading:** Memperbaiki indikator *loading* transisi agar menggunakan *fullscreen fixed overlay* berisolasi CSS, mencegah halaman dasbor dan tabel pengguna ciut atau bertabrakan.
+- **Pengecekan Unik & Auto-Retry:** Menambahkan jaminan pengacakan unik (*array uniqueness*) serta mekanisme *auto-retry* otomatis jika terjadi bentrok kode dengan router, sehingga pembuatan 500 voucher dijamin **100% genap 500 voucher**.
+
+##### 🎨 Dasbor & Modernisasi UI
+- **Perangkat Terhubung:** Kartu "Host Hotspot" diubah nama menjadi "Perangkat Terhubung" dan dipindahkan ke posisi ke-2 (di antara *Hotspot Aktif* dan *Jumlah Voucher*).
+- **Indikator Utilisasi Warna:** Indikator *progress bar* utilisasi online kini menyesuaikan warna berdasarkan persentase (Tinggi: Hijau, Sedang: Kuning, Rendah: Merah).
+- **Penyesuaian Presisi Tinggi Kartu:** Mengatur `min-height: 114px` pada deretan kartu *System Resource* agar sejajar sempurna tanpa mengganggu *grid system*.
+- **Modernisasi Kartu Sesi / Router (`sessions.php`):** Desain ulang antarmuka daftar router dengan tampilan *Glassmorphic SaaS modern*, ikon glowing, serta tombol *pill/ghost button* (*Buka*, *Edit*, *Hapus*).
 
 #### Pembaruan Kustom (Patched by Agil) - 26-07-2026
 ##### 📊 Dasbor & Metrik Hotspot
