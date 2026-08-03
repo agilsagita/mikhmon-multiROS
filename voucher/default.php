@@ -204,11 +204,19 @@
 <script>
 (function() {
     var priceColorMap = {
-        '1000':  '#2563eb', // Biru Terang (5JAM)
-        '2000':  '#7c2d12', // Cokelat Tua (12JAM)
-        '3000':  '#dc2626', // Merah Terang (24JAM)
-        '20000': '#be185d', // Pink / Magenta Tua (1-MINGGU)
-        '70000': '#4338ca'  // Indigo / Biru Gelap (1-BULAN)
+        '1000':   '#808080', // Abu-abu (1k)
+        '2000':   '#228B22', // Hijau Tua (2k)
+        '3000':   '#dc2626', // Merah Terang (3k)
+        '4000':   '#ea580c', // Oranye (4k)
+        '5000':   '#d97706', // Emas / Amber (5k)
+        '10000':  '#0284c7', // Cyan / Biru Muda (10k)
+        '15000':  '#059669', // Emerald Green (15k)
+        '20000':  '#be185d', // Pink / Magenta (20k)
+        '25000':  '#7c3aed', // Violet / Ungu (25k)
+        '30000':  '#0891b2', // Teal (30k)
+        '50000':  '#2563eb', // Royal Blue (50k)
+        '70000':  '#4338ca', // Indigo / Biru Gelap (70k)
+        '100000': '#b45309'  // Bronze / Gold (100k)
     };
 
     var vouchers = document.querySelectorAll('.js-price-voucher:not(.dynamic-colored)');
