@@ -214,8 +214,13 @@
         '20000':  '#be185d', // Pink / Magenta (20k)
         '25000':  '#7c3aed', // Violet / Ungu (25k)
         '30000':  '#0891b2', // Teal (30k)
+        '35000':  '#0d9488', // Dark Teal (35k)
+        '45000':  '#65a30d', // Lime Green (45k)
         '50000':  '#2563eb', // Royal Blue (50k)
+        '65000':  '#9333ea', // Bright Purple (65k)
         '70000':  '#4338ca', // Indigo / Biru Gelap (70k)
+        '75000':  '#c026d3', // Fuchsia (75k)
+        '90000':  '#4f46e5', // Deep Indigo (90k)
         '100000': '#b45309'  // Bronze / Gold (100k)
     };
 
