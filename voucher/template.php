@@ -1,4 +1,4 @@
-<style>
+						<style>
 /* Reset dasar untuk cetak presisi A4 (5x10) */
 * {
     box-sizing: border-box;
@@ -204,8 +204,8 @@
 <script>
 (function() {
     var priceColorMap = {
-        '1000':  '#2563eb', // Biru Terang (5JAM)
-        '2000':  '#7c2d12', // Cokelat Tua (12JAM)
+        '1000':  '#808080', // Biru Terang (5JAM)
+        '2000':  '#228B22', // Cokelat Tua (12JAM)
         '3000':  '#dc2626', // Merah Terang (24JAM)
         '20000': '#be185d', // Pink / Magenta Tua (1-MINGGU)
         '70000': '#4338ca'  // Indigo / Biru Gelap (1-BULAN)
@@ -232,3 +232,4 @@
     });
 })();
 </script>
+	        
