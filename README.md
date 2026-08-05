@@ -89,6 +89,10 @@ Project ini telah dilengkapi dengan konfigurasi Docker Compose untuk memudahkan 
 
 ## 🔄 Riwayat Perubahan (Changelog)
 
+#### Pembaruan Kustom (Patched by Agil) - 05-08-2026
+##### 🐛 Perbaikan Bug Scheduler `*sys` Nyangkut
+- **Fix Delay `on-login`:** Memangkas waktu jeda pembuatan scheduler kalkulator waktu *expired* pada script `on-login` (dari total 10 detik menjadi 2 detik) di file `adduserprofile.php` dan `userprofilebyname.php`. Perbaikan ini mengatasi celah kegagalan sistem dimana jika koneksi pengguna terputus sesaat setelah login, RouterOS akan membatalkan script di tengah jalan, yang menyebabkan scheduler tertinggal (berstatus `*sys`) dan akun pengguna menjadi *unlimited*.
+
 #### Pembaruan Kustom (Patched by Agil) v3.20.1 - 08-03-2026
 ##### 🚀 Proses Background (Generate & Remove User)
 - **Generate Voucher Background:** Proses pembuatan (*generate*) voucher dalam jumlah besar kini dilakukan di background (`genstatus.php`). Antarmuka kini menampilkan halaman loading dan polling status, mencegah *timeout* koneksi PHP saat membuat banyak voucher.
